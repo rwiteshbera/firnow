@@ -1,2 +1,2 @@
-# letsfir
+# firnow
 Final year project.
