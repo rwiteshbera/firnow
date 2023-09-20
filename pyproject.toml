@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "firnow"
+version = "0.1.0"
+description = "Backend for FIRNow."
+authors = ["Tsubasa <scientistjishan@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.98.0"
+uvicorn = {extras = ["standard"], version = "^0.23.2"}
+aiohttp = "^3.8.5"
+firebase-admin = "^6.2.0"
+tortoise-orm = {extras = ["asyncpg"], version = "^0.20.0"}
+
+
+[tool.poetry.group.dev.dependencies]
+beautifulsoup4 = "^4.12.2"
+lxml = "^4.9.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
