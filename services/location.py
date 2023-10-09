@@ -2,7 +2,7 @@ from typing import Optional, cast
 
 from fastapi import FastAPI, HTTPException
 
-from firebase.firestore import db
+from databases.firestore import db
 from models.errors import RequestError
 from models.location import DistrictList, State
 
