@@ -5,7 +5,6 @@ from fastapi import APIRouter, Depends, Response, status
 from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
-from pydantic import HttpUrl
 
 from config import settings
 from databases.redis import RedisClient
