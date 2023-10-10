@@ -6,26 +6,21 @@ from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from tortoise.exceptions import DoesNotExist
 
+from config import settings
 from models.police_station import PoliceStation_Pydantic
 from models.tables import PoliceStation
-from settings import config
+from routes.police_station_urls import LOGIN_URL
 
 oauth2_scheme_police = OAuth2PasswordBearer(tokenUrl="police-station/login")
 oauth2_scheme_user = OAuth2PasswordBearer(tokenUrl="user/login")
-HOST: str = config["APP_HOST"] or "http://127.0.0.1:8000"
-SECRET_KEY = (
-    config["JWT_SECRET_KEY"]
-    or "37401a016623f5f320bda74c83063d32ebc4bf5417bd5dbf99aa4f0afbf4cb02"
-)
-ALGORITHM = config["JWT_ALGORITHM"] or "HS256"
 
 
-async def get_id(token: str, for_: str) -> int:
+async def get_id(token: str) -> int:
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail={
             "message": "Could not validate credentials",
-            "redirect": f"{HOST}/auth/{for_}/login",
+            "redirect": LOGIN_URL,
         },
         headers={"WWW-Authenticate": "Bearer"},
     )
@@ -34,8 +29,8 @@ async def get_id(token: str, for_: str) -> int:
         payload = await asyncio.to_thread(
             jwt.decode,
             token,
-            SECRET_KEY,
-            algorithms=[ALGORITHM],
+            settings.JWT_SECRET_KEY,
+            algorithms=[settings.JWT_ALGORITHM],
         )
         return payload.get("id", 0)
 
@@ -46,11 +41,11 @@ async def get_id(token: str, for_: str) -> int:
 async def get_police_station_id(
     token: Annotated[str, Depends(oauth2_scheme_police)]
 ) -> int:
-    return await get_id(token, "police-station")
+    return await get_id(token)
 
 
 async def get_user_id(token: Annotated[str, Depends(oauth2_scheme_user)]) -> int:
-    return await get_id(token, "user")
+    return await get_id(token)
 
 
 async def get_police_station(

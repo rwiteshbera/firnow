@@ -5,13 +5,12 @@ from fastapi import FastAPI, HTTPException
 
 from models.errors import RequestError
 from models.auth import Snowflake
-from settings import config
+from config import settings
 
 id_service = FastAPI()
-creation_date_string: str = config["APP_CREATION_DATE"] or "01 Jan 2023"
-creation_date: datetime = datetime.strptime(creation_date_string, "%d %b %Y")
+creation_date: datetime = settings.APP_CREATION_DATE
 previous_offset: int = 0
-node_id: int = int(config["NODE_ID"] or 0)
+node_id: int = settings.NODE_ID
 sequence_num: int = 0
 
 
