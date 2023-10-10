@@ -1,10 +1,8 @@
 import firebase_admin
 from firebase_admin import credentials, firestore_async
 
-from settings import config
+from config import settings
 
-cert: str = config["FIRESTORE_CERT"] or ""
-
-cred = credentials.Certificate(cert)
+cred = credentials.Certificate(settings.FIRESTORE_CERT)
 app = firebase_admin.initialize_app(cred)
 db = firestore_async.client(app)
