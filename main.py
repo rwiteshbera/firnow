@@ -4,21 +4,20 @@ import uvicorn
 from fastapi import FastAPI
 from tortoise import Tortoise
 
+from config import settings
 from databases.redis import RedisClient
 from services.auth import auth_service
 from services.id import id_service
 from services.location import location_service
 from session import SingletonSession
-from settings import config
 
 
 @asynccontextmanager
 async def manage_session(app: FastAPI):
-    RedisClient.get_client()
+    await RedisClient.get_client()
     SingletonSession.get_session()
     await Tortoise.init(
-        db_url=config["POSTGRES_HOST"]
-        or "postgres://postgres:postgres@localhost:5432/postgres",
+        db_url=str(settings.POSTGRES_URL),
         modules={"models": ["models.tables"]},
         use_tz=True,
     )
