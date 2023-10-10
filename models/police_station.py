@@ -1,10 +1,10 @@
 import re
 from datetime import datetime
-from typing import Annotated, TypeVar
+from typing import Annotated
 
 from fastapi import status
 from fastapi.exceptions import HTTPException
-from pydantic import BaseModel, ConfigDict, EmailStr, Field, HttpUrl
+from pydantic import ConfigDict, EmailStr, Field, HttpUrl
 from pydantic.functional_validators import AfterValidator
 from tortoise.contrib.pydantic.creator import pydantic_model_creator
 
