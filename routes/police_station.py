@@ -1,5 +1,5 @@
 import asyncio
-from typing import Annotated, Any, Optional, cast
+from typing import Annotated, Optional, cast
 
 from fastapi import APIRouter, Depends, Response, status
 from fastapi.encoders import jsonable_encoder
@@ -7,13 +7,16 @@ from fastapi.exceptions import HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from pydantic import HttpUrl
 
+from config import settings
 from databases.redis import RedisClient
 from models.auth import (
     AccessToken,
-    OTPAction,
-    OTPRequest,
-    OTPSentResponse,
-    OTPVerifiedResponse,
+    InvalidOtp,
+    InvalidOtpResponse,
+    OtpRequest,
+    SentOtp,
+    SentOtpResponse,
+    VerifiedOtpResponse,
 )
 from models.errors import PoliceStationNotFound
 from models.police_station import (
@@ -23,18 +26,17 @@ from models.police_station import (
     PoliceStationResponse,
 )
 from models.tables import PoliceStation
-from settings import config
+from routes.police_station_urls import *
 from utils.dependencies import get_police_station
 from utils.id import get_id
 from utils.otp import generate_otp, send_otp
 from utils.password import encrypt, verify_password
 from utils.token import create_token
 
-router = APIRouter(prefix="/police-station", tags=["Police Station"])
+router = APIRouter(prefix=f"/{prefix}", tags=["Police Station"])
 
-ACCESS_TOKEN_EXPIRE_HOURS: int = int(config["ACCESS_TOKEN_EXPIRE_HOURS"] or 24)
-REFRESH_TOKEN_EXPIRE_HOURS: int = int(config["REFRESH_TOKEN_EXPIRE_HOURS"] or 24 * 7)
-HOST: str = config["APP_HOST"] or "http://127.0.0.1:8000"
+ACCESS_TOKEN_EXPIRE_HOURS: int = settings.ACCESS_TOKEN_EXPIRE_HOURS
+REFRESH_TOKEN_EXPIRE_HOURS: int = settings.REFRESH_TOKEN_EXPIRE_HOURS
 
 
 async def authenticate_police(email: str, password: str) -> Optional[PoliceStation]:
@@ -56,7 +58,7 @@ async def register_police_station(response: Response, payload: PoliceStationRequ
             status_code=status.HTTP_409_CONFLICT,
             detail={
                 "message": "Police Station already exists",
-                "redirect": f"{HOST}/auth{router.prefix}/login",
+                "redirect": LOGIN_URL,
             },
         )
 
@@ -84,18 +86,15 @@ async def register_police_station(response: Response, payload: PoliceStationRequ
     access_token_obj = AccessToken(
         access_token=access_token,
         refreshAfter=ACCESS_TOKEN_EXPIRE_HOURS - 0.5,
-        refreshUrl=HttpUrl(f"{HOST}/auth/refresh"),
+        refreshUrl=REFRESH_TOKEN_URL,
     )
 
-    otp_resp = await send_otp(f"{HOST}/auth{router.prefix}/send-otp", access_token)
-    url = otp_resp.actions.verifyOtp or HttpUrl(
-        f"{HOST}/auth{router.prefix}verify-email"
-    )
+    otp_resp = await send_otp(SEND_OTP_URL, access_token)
 
     return PoliceStationRegistrationResponse(
         **access_token_obj.model_dump(),
         police_station=cast(PoliceStation_Pydantic, police_station_resp),
-        redirect=url,
+        redirect=otp_resp.action.verifyOtp,
     )
 
 
@@ -130,21 +129,16 @@ async def login_police_station(
         access_token_obj = AccessToken(
             access_token=access_token,
             refreshAfter=ACCESS_TOKEN_EXPIRE_HOURS - 0.5,
-            refreshUrl=HttpUrl(f"{HOST}/auth/refresh"),
+            refreshUrl=REFRESH_TOKEN_URL,
         )
         successful_resp = PoliceStationResponse(
             **access_token_obj.model_dump(),
-            redirect=HttpUrl(f"{HOST}{router.prefix}/dashboard"),
+            redirect=POLICE_STATION_DASHBOARD_URL,
         )
 
         if not police_station.verified:
-            otp_resp = await send_otp(
-                f"{HOST}/auth{router.prefix}/send-otp", access_token
-            )
-
-            if url := otp_resp.actions.verifyOtp:
-                successful_resp.redirect = url
-
+            otp_resp = await send_otp(SEND_OTP_URL, access_token)
+            successful_resp.redirect = otp_resp.action.verifyOtp
             return successful_resp
 
         return successful_resp
@@ -154,14 +148,14 @@ async def login_police_station(
             status_code=status.HTTP_404_NOT_FOUND,
             detail={
                 "message": "Email ID not found.",
-                "redirect": f"{HOST}/auth{router.prefix}/register",
+                "redirect": REGISTER_URL,
             },
         )
 
 
 @router.get(
     "/send-otp",
-    response_model=OTPSentResponse,
+    response_model=SentOtpResponse,
     response_model_exclude_unset=True,
 )
 async def send_otp_police_station(
@@ -169,54 +163,54 @@ async def send_otp_police_station(
 ):
     otp = generate_otp(6)
     # send otp to email
-    redis = RedisClient.get_client()
-    await redis.set(f"otp:{unverified.id}", otp, ex=60 * 5)  # type: ignore
-    return OTPSentResponse(
+    redis = await RedisClient.get_client()
+    await redis.set(f"otp:{unverified.id}", otp, ex=60 * 5)
+    return SentOtpResponse(
         message="OTP sent successfully",
-        actions=OTPAction(
-            verifyOtp=HttpUrl(f"{HOST}/auth{router.prefix}/verify-email")
-        ),
+        action=SentOtp(verifyOtp=VERIFY_EMAIL_URL),
     )
 
 
 @router.post(
     "/verify-email",
-    response_model=OTPVerifiedResponse,
+    response_model=VerifiedOtpResponse,
 )
 async def verify_police_station_email(
     unverified: Annotated[PoliceStation, Depends(get_police_station)],
-    body: OTPRequest,
+    body: OtpRequest,
 ):
-    if unverified.verified:  # type: ignore
-        return OTPVerifiedResponse(
+    if unverified.verified:
+        return VerifiedOtpResponse(
             message="Email already verified",
-            redirect=HttpUrl(f"{HOST}{router.prefix}/dashboard"),
+            redirect=POLICE_STATION_DASHBOARD_URL,
         )
 
-    detail = OTPSentResponse(
+    detail = InvalidOtpResponse(
         message="Invalid OTP",
-        actions=OTPAction(sendOtp=HttpUrl(f"{HOST}/auth{router.prefix}/send-otp")),
+        action=InvalidOtp(sendOtp=SEND_OTP_URL),
     )
 
-    otp_error = HTTPException(
-        status_code=status.HTTP_400_BAD_REQUEST,
-        detail=jsonable_encoder(detail, exclude_unset=True),
-    )
-    redis = RedisClient.get_client()
+    redis = await RedisClient.get_client()
     otp = await redis.get(f"otp:{unverified.id}")
 
     if not otp:
         detail.message = "OTP expired"
-        raise otp_error
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=jsonable_encoder(detail, exclude_unset=True),
+        )
 
     if otp == body.otp:
         await redis.delete(f"otp:{unverified.id}")
         await PoliceStation.select_for_update().filter(id=unverified.id).update(
             verified=True
         )
-        return OTPVerifiedResponse(
+        return VerifiedOtpResponse(
             message="Email verified successfully",
-            redirect=HttpUrl(f"{HOST}{router.prefix}/dashboard"),
+            redirect=POLICE_STATION_DASHBOARD_URL,
         )
 
-    raise otp_error
+    raise HTTPException(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        detail=jsonable_encoder(detail, exclude_unset=True),
+    )
