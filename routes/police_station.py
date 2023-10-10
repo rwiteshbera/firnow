@@ -84,8 +84,8 @@ async def register_police_station(response: Response, payload: PoliceStationRequ
 
     access_token_obj = AccessToken(
         access_token=access_token,
-        refreshAfter=ACCESS_TOKEN_EXPIRE_HOURS - 0.5,
-        refreshUrl=REFRESH_TOKEN_URL,
+        refresh_after=ACCESS_TOKEN_EXPIRE_HOURS - 0.5,
+        refresh_url=REFRESH_TOKEN_URL,
     )
 
     otp_resp = await send_otp(SEND_OTP_URL, access_token)
@@ -127,8 +127,8 @@ async def login_police_station(
         response.set_cookie(key="refresh_token", value=refresh_token, httponly=True)
         access_token_obj = AccessToken(
             access_token=access_token,
-            refreshAfter=ACCESS_TOKEN_EXPIRE_HOURS - 0.5,
-            refreshUrl=REFRESH_TOKEN_URL,
+            refresh_after=ACCESS_TOKEN_EXPIRE_HOURS - 0.5,
+            refresh_url=REFRESH_TOKEN_URL,
         )
         successful_resp = PoliceStationResponse(
             **access_token_obj.model_dump(),

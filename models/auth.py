@@ -1,4 +1,5 @@
-from pydantic import BaseModel, HttpUrl
+from pydantic import BaseModel, ConfigDict, HttpUrl
+from pydantic.alias_generators import to_camel
 
 from models.action import InvalidOtp, SentOtp
 
@@ -24,10 +25,12 @@ class VerifiedOtpResponse(OtpResponse):
 
 
 class AccessToken(BaseModel):
+    model_config = ConfigDict(populate_by_name=True, alias_generator=to_camel)
+
     access_token: str
     token_type: str = "bearer"
-    refreshAfter: float
-    refreshUrl: HttpUrl
+    refresh_after: float
+    refresh_url: HttpUrl
 
 
 class Snowflake(BaseModel):
