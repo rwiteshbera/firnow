@@ -1,9 +1,9 @@
 from fastapi import FastAPI
 
-from routes import police
+from routes import police_station
 
 auth_service = FastAPI()
-auth_service.include_router(police.router)
+auth_service.include_router(police_station.router)
 
 
 if __name__ == "__main__":
