@@ -1,24 +1,25 @@
-from enum import Enum
-from typing import Optional
+from pydantic import BaseModel, HttpUrl
 
-from pydantic import BaseModel, ConfigDict, Field, HttpUrl
-
-from models.action import OTPAction
+from models.action import InvalidOtp, SentOtp
 
 
-class OTPRequest(BaseModel):
+class OtpRequest(BaseModel):
     otp: str
 
 
-class OTPResponse(BaseModel):
+class OtpResponse(BaseModel):
     message: str
 
 
-class OTPSentResponse(OTPResponse):
-    actions: OTPAction
+class SentOtpResponse(OtpResponse):
+    action: SentOtp
 
 
-class OTPVerifiedResponse(OTPResponse):
+class InvalidOtpResponse(OtpResponse):
+    action: InvalidOtp
+
+
+class VerifiedOtpResponse(OtpResponse):
     redirect: HttpUrl
 
 
