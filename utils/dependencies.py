@@ -20,7 +20,7 @@ async def get_id(token: str) -> int:
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail={
             "message": "Could not validate credentials",
-            "redirect": LOGIN_URL,
+            "redirect": str(LOGIN_URL),
         },
         headers={"WWW-Authenticate": "Bearer"},
     )
