@@ -1,6 +1,6 @@
 from typing import Optional, cast
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, status
 
 from databases.firestore import db
 from models.errors import RequestError
@@ -27,7 +27,7 @@ async def get_states() -> list[State]:
     tags=["Location"],
     summary="Get the state by state code",
     responses={
-        400: {
+        status.HTTP_400_BAD_REQUEST: {
             "description": "Bad Request",
             "model": RequestError,
         },
@@ -37,7 +37,7 @@ async def get_state(state_code: str) -> State:
     state = await db.collection("states").document(state_code).get()
     st: Optional[State] = cast(State, state.to_dict())
     if st is None:
-        raise HTTPException(status_code=400, detail="Invalid state code")
+        raise HTTPException(status_code=400, detail={"message": "Invalid state code"})
     return st
 
 
@@ -46,16 +46,18 @@ async def get_state(state_code: str) -> State:
     tags=["Location"],
     summary="Get all districts of the state",
     responses={
-        400: {
+        status.HTTP_200_OK: {
+            "example": {"districts": ["district1", "district2"], "total": 2}
+        },
+        status.HTTP_400_BAD_REQUEST: {
             "description": "Bad Request",
             "model": RequestError,
         },
-        200: {"example": {"districts": ["district1", "district2"], "total": 2}},
     },
 )
 async def get_districts(state_code: str) -> DistrictList:
     district = await db.collection("districts").document(state_code).get()
     dist: Optional[DistrictList] = cast(DistrictList, district.to_dict())
     if dist is None:
-        raise HTTPException(status_code=400, detail="Invalid state code")
+        raise HTTPException(status_code=400, detail={"message": "Invalid state code"})
     return dist
