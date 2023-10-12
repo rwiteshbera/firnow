@@ -17,7 +17,12 @@ from models.auth import (
     SentOtpResponse,
     VerifiedOtpResponse,
 )
-from models.errors import PoliceStationNotFound
+from models.errors import (
+    PoliceStationNotFound,
+    RequestError,
+    RequestErrorWithAction,
+    RequestErrorWithRedirect,
+)
 from models.police_station import (
     PoliceStation_Pydantic,
     PoliceStationRegistrationResponse,
@@ -49,15 +54,48 @@ async def authenticate_police(email: str, password: str) -> Optional[PoliceStati
     return police_station if matched else None
 
 
-@router.post("/register", response_model=PoliceStationRegistrationResponse)
+@router.post(
+    "/register",
+    summary="Register a new police station",
+    status_code=status.HTTP_201_CREATED,
+    responses={
+        status.HTTP_201_CREATED: {
+            "description": "Successful Response",
+            "model": PoliceStationRegistrationResponse,
+        },
+        status.HTTP_409_CONFLICT: {
+            "description": "Conflict Error",
+            "model": RequestErrorWithRedirect,
+        },
+    },
+)
 async def register_police_station(response: Response, payload: PoliceStationRequest):
+    """
+    Register a new police station. The request body should contain the following fields:
+    - **name:** Name of the police station
+    - **email:** Email ID of the police station
+    - **password:** Password to be set for the police station
+    - **state:** Name of the state where the police station is located
+    - **district:** Name of the district where the police station is located
+
+    **Example:**
+    ```
+    {
+        "name": "Example Thana",
+        "email": "example.thana@gov.in",
+        "password": "1234567Aa@",
+        "state": "West Bengal",
+        "district": "Hooghly"
+    }
+    ```
+    """
     # check if the email id already exists
     if await PoliceStation.exists(email=payload.email):
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
             detail={
                 "message": "Police Station already exists",
-                "redirect": LOGIN_URL,
+                "redirect": str(LOGIN_URL),
             },
         )
 
@@ -97,10 +135,36 @@ async def register_police_station(response: Response, payload: PoliceStationRequ
     )
 
 
-@router.post("/login", response_model=PoliceStationResponse)
+@router.post(
+    "/login",
+    summary="Login to an existing police station account",
+    responses={
+        status.HTTP_200_OK: {
+            "description": "Successful Response",
+            "model": PoliceStationResponse,
+        },
+        status.HTTP_401_UNAUTHORIZED: {
+            "description": "Unauthorized Response",
+            "model": RequestError,
+        },
+        status.HTTP_404_NOT_FOUND: {
+            "description": "Not Found Response",
+            "model": RequestErrorWithRedirect,
+        },
+    },
+)
 async def login_police_station(
     response: Response, form_data: OAuth2PasswordRequestForm = Depends()
 ):
+    """
+    Login to an existing police station account. The request payload should be sent as a
+    form data with the following fields:
+    - **username:** Email ID of the police station
+    - **password:** Password of the police station
+
+    The `accessToken` received in the response should be used as a ***bearer token*** while making
+    request to the protected endpoints.
+    """
     try:
         police_station = await authenticate_police(
             form_data.username, form_data.password
@@ -147,37 +211,40 @@ async def login_police_station(
             status_code=status.HTTP_404_NOT_FOUND,
             detail={
                 "message": "Email ID not found.",
-                "redirect": REGISTER_URL,
+                "redirect": str(REGISTER_URL),
             },
         )
 
 
-@router.get(
-    "/send-otp",
-    response_model=SentOtpResponse,
-    response_model_exclude_unset=True,
-)
-async def send_otp_police_station(
-    unverified: Annotated[PoliceStation, Depends(get_police_station)]
-):
-    otp = generate_otp(6)
-    # send otp to email
-    redis = await RedisClient.get_client()
-    await redis.set(f"otp:{unverified.id}", otp, ex=60 * 5)
-    return SentOtpResponse(
-        message="OTP sent successfully",
-        action=SentOtp(verifyOtp=VERIFY_EMAIL_URL),
-    )
-
-
 @router.post(
     "/verify-email",
-    response_model=VerifiedOtpResponse,
+    summary="Verify the police station email",
+    responses={
+        status.HTTP_200_OK: {
+            "description": "Successful Response",
+            "model": VerifiedOtpResponse,
+        },
+        status.HTTP_400_BAD_REQUEST: {
+            "description": "Invalid OTP Response",
+            "model": RequestErrorWithAction,
+        },
+    },
 )
 async def verify_police_station_email(
     unverified: Annotated[PoliceStation, Depends(get_police_station)],
     body: OtpRequest,
 ):
+    """
+    Verify the police station email. The request body should contain the following fields:
+    - **otp:** OTP sent to the police station email
+
+    **Example:**
+    ```
+    {
+        "otp": "123456"
+    }
+    ```
+    """
     if unverified.verified:
         return VerifiedOtpResponse(
             message="Email already verified",
@@ -212,4 +279,39 @@ async def verify_police_station_email(
     raise HTTPException(
         status_code=status.HTTP_400_BAD_REQUEST,
         detail=jsonable_encoder(detail, exclude_unset=True),
+    )
+
+
+@router.get(
+    "/send-otp",
+    summary="Send OTP to the police station email",
+    responses={
+        status.HTTP_200_OK: {
+            "description": "Successful Response",
+            "model": SentOtpResponse,
+        },
+        status.HTTP_401_UNAUTHORIZED: {
+            "description": "Unauthorized Response",
+            "model": RequestErrorWithRedirect,
+        },
+        status.HTTP_404_NOT_FOUND: {
+            "description": "Not Found Response",
+            "model": RequestError,
+        },
+    },
+)
+async def send_otp_police_station(
+    unverified: Annotated[PoliceStation, Depends(get_police_station)]
+):
+    """
+    Send OTP to the email address associated with the police-station account.
+    This is a protected endpoint and requires the `accessToken` to be sent as a ***bearer token***.
+    """
+    otp = generate_otp(6)
+    # send otp to email
+    redis = await RedisClient.get_client()
+    await redis.set(f"otp:{unverified.id}", otp, ex=60 * 5)
+    return SentOtpResponse(
+        message="OTP sent successfully",
+        action=SentOtp(verifyOtp=VERIFY_EMAIL_URL),
     )
