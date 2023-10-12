@@ -1,11 +1,11 @@
 import time
 from datetime import datetime
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, status
 
-from models.errors import RequestError
-from models.auth import Snowflake
 from config import settings
+from models.auth import Snowflake
+from models.errors import RequestError
 
 id_service = FastAPI()
 creation_date: datetime = settings.APP_CREATION_DATE
@@ -16,14 +16,21 @@ sequence_num: int = 0
 
 @id_service.get(
     "/",
-    responses={500: {"model": RequestError, "description": "Time exceeded"}},
+    responses={
+        status.HTTP_500_INTERNAL_SERVER_ERROR: {
+            "model": RequestError,
+        }
+    },
 )
 def get_id() -> Snowflake:
     global previous_offset, node_id, sequence_num
     offset: int = round(time.time() - creation_date.timestamp())
 
     if (offset.bit_length()) > 41:
-        raise HTTPException(status_code=500, detail="Time exceeded")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail={"message": "Time exceeded"},
+        )
 
     sequence_bits: int = sequence_num.bit_length()
     sequence_num = (
