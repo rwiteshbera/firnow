@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from pydantic import BaseModel, ConfigDict, HttpUrl
 from pydantic.alias_generators import to_camel
 
@@ -29,7 +31,7 @@ class AccessToken(BaseModel):
 
     access_token: str
     token_type: str = "bearer"
-    refresh_after: float
+    refresh_after: datetime
     refresh_url: HttpUrl
 
 
