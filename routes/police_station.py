@@ -1,7 +1,7 @@
 import asyncio
 from typing import Annotated, Optional, cast
 
-from fastapi import APIRouter, Depends, Response, status
+from fastapi import APIRouter, Body, Depends, Response, status
 from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
@@ -9,7 +9,6 @@ from fastapi.security import OAuth2PasswordRequestForm
 from config import settings
 from databases.redis import RedisClient
 from models.auth import (
-    AccessToken,
     InvalidOtp,
     InvalidOtpResponse,
     OtpRequest,
@@ -35,7 +34,7 @@ from utils.dependencies import get_police_station
 from utils.id import get_id
 from utils.otp import generate_otp, send_otp
 from utils.password import encrypt, verify_password
-from utils.token import create_token
+from utils.token import create_token, get_access_token_obj, get_expire_time
 
 router = APIRouter(prefix=f"/{prefix}", tags=["Police Station"])
 
@@ -69,7 +68,9 @@ async def authenticate_police(email: str, password: str) -> Optional[PoliceStati
         },
     },
 )
-async def register_police_station(response: Response, payload: PoliceStationRequest):
+async def register_police_station(
+    response: Response, payload: Annotated[PoliceStationRequest, Body()]
+):
     """
     Register a new police station. The request body should contain the following fields:
     - **name:** Name of the police station
@@ -108,25 +109,9 @@ async def register_police_station(response: Response, payload: PoliceStationRequ
     result = await PoliceStation.create(**police_station_req)
 
     police_station_resp = await PoliceStation_Pydantic.from_tortoise_orm(result)
-    access_token = await asyncio.to_thread(
-        create_token,
-        {"id": result.id},
-        ACCESS_TOKEN_EXPIRE_HOURS,
-    )
-    refresh_token = await asyncio.to_thread(
-        create_token,
-        {"access_token": access_token},
-        ACCESS_TOKEN_EXPIRE_HOURS * 24,
-    )
-    response.set_cookie(key="refresh_token", value=refresh_token, httponly=True)
+    access_token_obj = await get_access_token_obj(result.id, response)
 
-    access_token_obj = AccessToken(
-        access_token=access_token,
-        refresh_after=ACCESS_TOKEN_EXPIRE_HOURS - 0.5,
-        refresh_url=REFRESH_TOKEN_URL,
-    )
-
-    otp_resp = await send_otp(SEND_OTP_URL, access_token)
+    otp_resp = await send_otp(SEND_OTP_URL, access_token_obj.access_token)
 
     return PoliceStationRegistrationResponse(
         **access_token_obj.model_dump(),
@@ -177,30 +162,14 @@ async def login_police_station(
                     "message": "Incorrect email or password.",
                 },
             )
-
-        access_token = await asyncio.to_thread(
-            create_token,
-            {"id": police_station.id},
-            ACCESS_TOKEN_EXPIRE_HOURS,
-        )
-        refresh_token = await asyncio.to_thread(
-            create_token,
-            {"access_token": access_token},
-            ACCESS_TOKEN_EXPIRE_HOURS * 24,
-        )
-        response.set_cookie(key="refresh_token", value=refresh_token, httponly=True)
-        access_token_obj = AccessToken(
-            access_token=access_token,
-            refresh_after=ACCESS_TOKEN_EXPIRE_HOURS - 0.5,
-            refresh_url=REFRESH_TOKEN_URL,
-        )
+        access_token_obj = await get_access_token_obj(police_station.id, response)
         successful_resp = PoliceStationResponse(
             **access_token_obj.model_dump(),
             redirect=POLICE_STATION_DASHBOARD_URL,
         )
 
         if not police_station.verified:
-            otp_resp = await send_otp(SEND_OTP_URL, access_token)
+            otp_resp = await send_otp(SEND_OTP_URL, access_token_obj.access_token)
             successful_resp.redirect = otp_resp.action.verifyOtp
             return successful_resp
 
