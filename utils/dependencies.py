@@ -1,7 +1,7 @@
 import asyncio
-from typing import Annotated, Any, cast
+from typing import Annotated, Any, Optional, cast
 
-from fastapi import Depends, HTTPException, status
+from fastapi import Cookie, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from tortoise.exceptions import DoesNotExist
@@ -13,6 +13,27 @@ from routes.police_station_urls import LOGIN_URL
 
 oauth2_scheme_police = OAuth2PasswordBearer(tokenUrl="police-station/login")
 oauth2_scheme_user = OAuth2PasswordBearer(tokenUrl="user/login")
+
+
+def get_refresh_token(
+    refresh_token: Annotated[Optional[str], Cookie()] = None
+) -> Optional[str]:
+    return refresh_token
+
+
+async def get_id_from_token(
+    refresh_token: Annotated[Optional[str], Depends(get_refresh_token)]
+) -> int:
+    if refresh_token is None:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail={
+                "message": "Failed to retrieve the refresh token",
+                "redirect": str(LOGIN_URL),
+            },
+        )
+
+    return await get_id(refresh_token)
 
 
 async def get_id(token: str) -> int:
