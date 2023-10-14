@@ -36,7 +36,9 @@ from utils.otp import generate_otp, send_otp
 from utils.password import encrypt, verify_password
 from utils.token import create_token, get_access_token_obj, get_expire_time
 
-router = APIRouter(prefix=f"/{prefix}", tags=["Police Station"])
+router = APIRouter(
+    prefix=f"/{prefix}", tags=["Police Station Authentication Endpoints"]
+)
 
 ACCESS_TOKEN_EXPIRE_HOURS: int = settings.ACCESS_TOKEN_EXPIRE_HOURS
 REFRESH_TOKEN_EXPIRE_HOURS: int = settings.REFRESH_TOKEN_EXPIRE_HOURS
