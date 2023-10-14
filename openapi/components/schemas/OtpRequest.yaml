@@ -1,0 +1,8 @@
+properties:
+  otp:
+    type: string
+    title: Otp
+type: object
+required:
+  - otp
+title: OtpRequest

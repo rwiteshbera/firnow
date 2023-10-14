@@ -1,0 +1,15 @@
+properties:
+  message:
+    type: string
+    title: Message
+  redirect:
+    type: string
+    maxLength: 2083
+    minLength: 1
+    format: uri
+    title: Redirect
+type: object
+required:
+  - message
+  - redirect
+title: VerifiedOtpResponse

@@ -1,0 +1,31 @@
+get:
+  tags:
+    - Police Station Endpoints
+  summary: Get a police station by id
+  operationId: get_police_station_by_id_police_stations__id__get
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+        title: Id
+  responses:
+    '200':
+      description: Successful Response
+      content:
+        application/json:
+          schema:
+            $ref: ..\components\schemas\PoliceStation_Pydantic.yaml
+    '404':
+      content:
+        application/json:
+          schema:
+            $ref: ..\components\schemas\RequestError.yaml
+      description: Not Found
+    '422':
+      description: Validation Error
+      content:
+        application/json:
+          schema:
+            $ref: ..\components\schemas\HTTPValidationError.yaml

@@ -1,0 +1,29 @@
+properties:
+  district:
+    type: string
+    maxLength: 256
+    title: District
+  email:
+    type: string
+    format: email
+    title: Email
+  name:
+    type: string
+    maxLength: 256
+    title: Name
+  state:
+    type: string
+    maxLength: 256
+    title: State
+  password:
+    type: string
+    title: Password
+additionalProperties: false
+type: object
+required:
+  - district
+  - email
+  - name
+  - state
+  - password
+title: PoliceStationRequest

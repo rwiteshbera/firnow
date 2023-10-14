@@ -1,0 +1,11 @@
+properties:
+  message:
+    type: string
+    title: Message
+  action:
+    $ref: .\SentOtp.yaml
+type: object
+required:
+  - message
+  - action
+title: SentOtpResponse

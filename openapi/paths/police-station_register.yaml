@@ -1,0 +1,58 @@
+post:
+  tags:
+    - Police Station Authentication Endpoints
+  summary: Register a new police station
+  description: >-
+    Register a new police station. The request body should contain the following
+    fields:
+
+    - **name:** Name of the police station
+
+    - **email:** Email ID of the police station
+
+    - **password:** Password to be set for the police station
+
+    - **state:** Name of the state where the police station is located
+
+    - **district:** Name of the district where the police station is located
+
+
+    **Example:**
+
+    ```
+
+    {
+        "name": "Example Thana",
+        "email": "example.thana@gov.in",
+        "password": "1234567Aa@",
+        "state": "West Bengal",
+        "district": "Hooghly"
+    }
+
+    ```
+  operationId: register_police_station_police_station_register_post
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ..\components\schemas\PoliceStationRequest.yaml
+    required: true
+  responses:
+    '201':
+      description: Successful Response
+      content:
+        application/json:
+          schema:
+            $ref: ..\components\schemas\PoliceStationRegistrationResponse.yaml
+    '409':
+      description: Conflict Error
+      content:
+        application/json:
+          schema:
+            $ref: ..\components\schemas\RequestErrorWithRedirect.yaml
+    '422':
+      description: Validation Error
+      content:
+        application/json:
+          schema:
+            $ref: ..\components\schemas\HTTPValidationError.yaml

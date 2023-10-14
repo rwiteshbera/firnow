@@ -1,0 +1,7 @@
+properties:
+  detail:
+    $ref: .\ErrorMessage.yaml
+type: object
+required:
+  - detail
+title: RequestError

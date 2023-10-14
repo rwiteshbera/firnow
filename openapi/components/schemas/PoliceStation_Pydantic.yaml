@@ -1,0 +1,42 @@
+properties:
+  district:
+    type: string
+    maxLength: 256
+    title: District
+  email:
+    type: string
+    format: email
+    title: Email
+  id:
+    type: integer
+    maximum: 9223372036854776000
+    minimum: 1
+    title: Id
+  name:
+    type: string
+    maxLength: 256
+    title: Name
+  state:
+    type: string
+    maxLength: 256
+    title: State
+  updatedAt:
+    type: string
+    format: date-time
+    title: Updatedat
+  verified:
+    anyOf:
+      - type: boolean
+      - type: 'null'
+    title: Verified
+    default: false
+additionalProperties: false
+type: object
+required:
+  - district
+  - email
+  - id
+  - name
+  - state
+  - updatedAt
+title: PoliceStation_Pydantic

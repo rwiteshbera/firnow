@@ -1,0 +1,15 @@
+properties:
+  message:
+    type: string
+    title: Message
+  action:
+    type: string
+    maxLength: 2083
+    minLength: 1
+    format: uri
+    title: Action
+type: object
+required:
+  - message
+  - action
+title: ErrorMessageWithAction

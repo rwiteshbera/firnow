@@ -1,0 +1,16 @@
+properties:
+  name:
+    type: string
+    title: Name
+  code:
+    type: string
+    title: Code
+  country:
+    type: string
+    title: Country
+type: object
+required:
+  - name
+  - code
+  - country
+title: State

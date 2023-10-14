@@ -1,0 +1,34 @@
+properties:
+  accessToken:
+    type: string
+    title: Accesstoken
+  tokenType:
+    type: string
+    title: Tokentype
+    default: bearer
+  refreshAfter:
+    type: string
+    format: date-time
+    title: Refreshafter
+  refreshUrl:
+    type: string
+    maxLength: 2083
+    minLength: 1
+    format: uri
+    title: Refreshurl
+  redirect:
+    type: string
+    maxLength: 2083
+    minLength: 1
+    format: uri
+    title: Redirect
+  policeStation:
+    $ref: .\PoliceStation_Pydantic.yaml
+type: object
+required:
+  - accessToken
+  - refreshAfter
+  - refreshUrl
+  - redirect
+  - policeStation
+title: PoliceStationRegistrationResponse

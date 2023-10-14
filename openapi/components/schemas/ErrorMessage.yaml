@@ -1,0 +1,8 @@
+properties:
+  message:
+    type: string
+    title: Message
+type: object
+required:
+  - message
+title: ErrorMessage

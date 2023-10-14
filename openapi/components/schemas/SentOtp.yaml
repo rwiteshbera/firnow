@@ -1,0 +1,11 @@
+properties:
+  verifyOtp:
+    type: string
+    maxLength: 2083
+    minLength: 1
+    format: uri
+    title: Verifyotp
+type: object
+required:
+  - verifyOtp
+title: SentOtp

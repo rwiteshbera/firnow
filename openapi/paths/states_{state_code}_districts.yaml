@@ -1,0 +1,36 @@
+get:
+  tags:
+    - Location
+  summary: Get all districts of the state
+  operationId: get_districts_states__state_code__districts_get
+  parameters:
+    - name: state_code
+      in: path
+      required: true
+      schema:
+        type: string
+        title: State Code
+  responses:
+    '200':
+      description: Successful Response
+      content:
+        application/json:
+          schema:
+            $ref: ..\components\schemas\DistrictList.yaml
+      example:
+        districts:
+          - district1
+          - district2
+        total: 2
+    '400':
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: ..\components\schemas\RequestError.yaml
+    '422':
+      description: Validation Error
+      content:
+        application/json:
+          schema:
+            $ref: ..\components\schemas\HTTPValidationError.yaml

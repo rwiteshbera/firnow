@@ -1,0 +1,42 @@
+get:
+  tags:
+    - General Authentication Endpoints
+  summary: Refresh access token
+  description: |-
+    This endpoint is used to refresh the access token.
+    It requires `refresh_token` cookie to be set.
+  operationId: refresh_token_refresh_get
+  parameters:
+    - name: refresh_token
+      in: cookie
+      required: false
+      schema:
+        anyOf:
+          - type: string
+          - type: 'null'
+        title: Refresh Token
+  responses:
+    '200':
+      description: Successful Response
+      content:
+        application/json:
+          schema:
+            $ref: ..\components\schemas\AccessToken.yaml
+    '400':
+      content:
+        application/json:
+          schema:
+            $ref: ..\components\schemas\RequestErrorWithRedirect.yaml
+      description: Bad Request
+    '401':
+      content:
+        application/json:
+          schema:
+            $ref: ..\components\schemas\RequestErrorWithRedirect.yaml
+      description: Unauthorized
+    '422':
+      description: Validation Error
+      content:
+        application/json:
+          schema:
+            $ref: ..\components\schemas\HTTPValidationError.yaml

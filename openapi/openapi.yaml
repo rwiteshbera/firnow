@@ -1,0 +1,53 @@
+openapi: 3.1.0
+info:
+  title: FastAPI
+  version: 0.1.0
+tags:
+  - name: Police Station Authentication Endpoints
+    x-displayName: Police Station Authentication Endpoints
+  - name: General Authentication Endpoints
+    x-displayName: General Authentication Endpoints
+  - name: Location
+    x-displayName: Location
+  - name: Police Station Endpoints
+    x-displayName: Police Station Endpoints
+paths:
+  /police-station/register:
+    $ref: paths/police-station_register.yaml
+  /police-station/login:
+    $ref: paths/police-station_login.yaml
+  /police-station/verify-email:
+    $ref: paths/police-station_verify-email.yaml
+  /police-station/send-otp:
+    $ref: paths/police-station_send-otp.yaml
+  /refresh:
+    $ref: paths/refresh.yaml
+  /states:
+    $ref: paths/states.yaml
+  /states/{state_code}:
+    $ref: paths/states_{state_code}.yaml
+  /states/{state_code}/districts:
+    $ref: paths/states_{state_code}_districts.yaml
+  /police-stations:
+    $ref: paths/police-stations.yaml
+  /police-stations/{id}:
+    $ref: paths/police-stations_{id}.yaml
+components:
+  securitySchemes:
+    OAuth2PasswordBearer:
+      type: oauth2
+      flows:
+        password:
+          scopes: {}
+          tokenUrl: police-station/login
+x-tagGroups:
+  - name: Authentication
+    tags:
+      - Police Station Authentication Endpoints
+      - General Authentication Endpoints
+  - name: Location
+    tags:
+      - Location
+  - name: General
+    tags:
+      - Police Station Endpoints

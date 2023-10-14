@@ -1,0 +1,14 @@
+properties:
+  districts:
+    items:
+      type: string
+    type: array
+    title: Districts
+  total:
+    type: integer
+    title: Total
+type: object
+required:
+  - districts
+  - total
+title: DistrictList

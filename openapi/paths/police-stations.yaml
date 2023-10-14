@@ -1,0 +1,15 @@
+get:
+  tags:
+    - Police Station Endpoints
+  summary: Get all registered police stations
+  operationId: get_police_station_police_stations_get
+  responses:
+    '200':
+      description: Successful Response
+      content:
+        application/json:
+          schema:
+            items:
+              $ref: ..\components\schemas\PoliceStation_Pydantic.yaml
+            type: array
+            title: Response Get Police Station Police Stations Get

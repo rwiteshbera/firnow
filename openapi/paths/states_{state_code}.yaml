@@ -1,0 +1,31 @@
+get:
+  tags:
+    - Location
+  summary: Get the state by state code
+  operationId: get_state_states__state_code__get
+  parameters:
+    - name: state_code
+      in: path
+      required: true
+      schema:
+        type: string
+        title: State Code
+  responses:
+    '200':
+      description: Successful Response
+      content:
+        application/json:
+          schema:
+            $ref: ..\components\schemas\State.yaml
+    '400':
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: ..\components\schemas\RequestError.yaml
+    '422':
+      description: Validation Error
+      content:
+        application/json:
+          schema:
+            $ref: ..\components\schemas\HTTPValidationError.yaml

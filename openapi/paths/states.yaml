@@ -1,0 +1,15 @@
+get:
+  tags:
+    - Location
+  summary: Get all states of the country
+  operationId: get_states_states_get
+  responses:
+    '200':
+      description: Successful Response
+      content:
+        application/json:
+          schema:
+            items:
+              $ref: ..\components\schemas\State.yaml
+            type: array
+            title: Response Get States States Get
