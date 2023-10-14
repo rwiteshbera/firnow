@@ -26,7 +26,7 @@ auth_service.include_router(police_station.router)
             "model": RequestErrorWithRedirect,
         },
     },
-    tags=["General"],
+    tags=["General Authentication Endpoints"],
     summary="Refresh access token",
 )
 async def refresh_token(
