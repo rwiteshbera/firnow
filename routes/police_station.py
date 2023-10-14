@@ -34,7 +34,7 @@ from utils.dependencies import get_police_station
 from utils.id import get_id
 from utils.otp import generate_otp, send_otp
 from utils.password import encrypt, verify_password
-from utils.token import create_token, get_access_token_obj, get_expire_time
+from utils.token import get_access_token_obj
 
 router = APIRouter(
     prefix=f"/{prefix}", tags=["Police Station Authentication Endpoints"]
