@@ -1,6 +1,7 @@
 get:
+  security: []
   tags:
-    - Location
+    - Location Endpoints
   summary: Get all states of the country
   operationId: get_states_states_get
   responses:

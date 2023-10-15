@@ -1,6 +1,7 @@
 get:
+  security: []
   tags:
-    - Police Station Endpoints
+    - General Endpoints
   summary: Get a police station by id
   operationId: get_police_station_by_id_police_stations__id__get
   parameters:

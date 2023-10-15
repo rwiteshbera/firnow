@@ -1,6 +1,7 @@
 get:
+  security: []
   tags:
-    - Location
+    - Location Endpoints
   summary: Get the state by state code
   operationId: get_state_states__state_code__get
   parameters:

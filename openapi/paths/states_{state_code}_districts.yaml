@@ -1,6 +1,7 @@
 get:
+  security: []
   tags:
-    - Location
+    - Location Endpoints
   summary: Get all districts of the state
   operationId: get_districts_states__state_code__districts_get
   parameters:

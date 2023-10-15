@@ -1,4 +1,6 @@
 get:
+  security: 
+    - OAuth2PasswordBearer: []
   tags:
     - General Authentication Endpoints
   summary: Refresh access token

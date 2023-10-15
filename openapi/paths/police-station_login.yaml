@@ -1,4 +1,5 @@
 post:
+  security: []
   tags:
     - Police Station Authentication Endpoints
   summary: Login to an existing police station account

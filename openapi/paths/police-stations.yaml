@@ -1,6 +1,7 @@
 get:
+  security: []
   tags:
-    - Police Station Endpoints
+    - General Endpoints
   summary: Get all registered police stations
   operationId: get_police_station_police_stations_get
   responses:
