@@ -16,16 +16,16 @@ get:
       content:
         application/json:
           schema:
-            $ref: ..\components\schemas\State.yaml
+            $ref: ../components/schemas/State.yaml
     '400':
       description: Bad Request
       content:
         application/json:
           schema:
-            $ref: ..\components\schemas\RequestError.yaml
+            $ref: ../components/schemas/RequestError.yaml
     '422':
       description: Validation Error
       content:
         application/json:
           schema:
-            $ref: ..\components\schemas\HTTPValidationError.yaml
+            $ref: ../components/schemas/HTTPValidationError.yaml

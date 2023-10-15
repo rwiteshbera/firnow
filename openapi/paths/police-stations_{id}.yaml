@@ -16,16 +16,16 @@ get:
       content:
         application/json:
           schema:
-            $ref: ..\components\schemas\PoliceStation_Pydantic.yaml
+            $ref: ../components/schemas/PoliceStation_Pydantic.yaml
     '404':
       content:
         application/json:
           schema:
-            $ref: ..\components\schemas\RequestError.yaml
+            $ref: ../components/schemas/RequestError.yaml
       description: Not Found
     '422':
       description: Validation Error
       content:
         application/json:
           schema:
-            $ref: ..\components\schemas\HTTPValidationError.yaml
+            $ref: ../components/schemas/HTTPValidationError.yaml

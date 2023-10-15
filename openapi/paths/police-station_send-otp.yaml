@@ -14,18 +14,18 @@ get:
       content:
         application/json:
           schema:
-            $ref: ..\components\schemas\SentOtpResponse.yaml
+            $ref: ../components/schemas/SentOtpResponse.yaml
     '401':
       description: Unauthorized Response
       content:
         application/json:
           schema:
-            $ref: ..\components\schemas\RequestErrorWithRedirect.yaml
+            $ref: ../components/schemas/RequestErrorWithRedirect.yaml
     '404':
       description: Not Found Response
       content:
         application/json:
           schema:
-            $ref: ..\components\schemas\RequestError.yaml
+            $ref: ../components/schemas/RequestError.yaml
   security:
     - OAuth2PasswordBearer: []

@@ -23,7 +23,7 @@ post:
     content:
       application/json:
         schema:
-          $ref: ..\components\schemas\OtpRequest.yaml
+          $ref: ../components/schemas/OtpRequest.yaml
     required: true
   responses:
     '200':
@@ -31,18 +31,18 @@ post:
       content:
         application/json:
           schema:
-            $ref: ..\components\schemas\VerifiedOtpResponse.yaml
+            $ref: ../components/schemas/VerifiedOtpResponse.yaml
     '400':
       description: Invalid OTP Response
       content:
         application/json:
           schema:
-            $ref: ..\components\schemas\RequestErrorWithAction.yaml
+            $ref: ../components/schemas/RequestErrorWithAction.yaml
     '422':
       description: Validation Error
       content:
         application/json:
           schema:
-            $ref: ..\components\schemas\HTTPValidationError.yaml
+            $ref: ../components/schemas/HTTPValidationError.yaml
   security:
     - OAuth2PasswordBearer: []

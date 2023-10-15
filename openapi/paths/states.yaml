@@ -10,6 +10,6 @@ get:
         application/json:
           schema:
             items:
-              $ref: ..\components\schemas\State.yaml
+              $ref: ../components/schemas/State.yaml
             type: array
             title: Response Get States States Get

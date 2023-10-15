@@ -16,7 +16,7 @@ get:
       content:
         application/json:
           schema:
-            $ref: ..\components\schemas\DistrictList.yaml
+            $ref: ../components/schemas/DistrictList.yaml
       example:
         districts:
           - district1
@@ -27,10 +27,10 @@ get:
       content:
         application/json:
           schema:
-            $ref: ..\components\schemas\RequestError.yaml
+            $ref: ../components/schemas/RequestError.yaml
     '422':
       description: Validation Error
       content:
         application/json:
           schema:
-            $ref: ..\components\schemas\HTTPValidationError.yaml
+            $ref: ../components/schemas/HTTPValidationError.yaml

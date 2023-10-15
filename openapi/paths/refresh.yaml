@@ -21,22 +21,22 @@ get:
       content:
         application/json:
           schema:
-            $ref: ..\components\schemas\AccessToken.yaml
+            $ref: ../components/schemas/AccessToken.yaml
     '400':
       content:
         application/json:
           schema:
-            $ref: ..\components\schemas\RequestErrorWithRedirect.yaml
+            $ref: ../components/schemas/RequestErrorWithRedirect.yaml
       description: Bad Request
     '401':
       content:
         application/json:
           schema:
-            $ref: ..\components\schemas\RequestErrorWithRedirect.yaml
+            $ref: ../components/schemas/RequestErrorWithRedirect.yaml
       description: Unauthorized
     '422':
       description: Validation Error
       content:
         application/json:
           schema:
-            $ref: ..\components\schemas\HTTPValidationError.yaml
+            $ref: ../components/schemas/HTTPValidationError.yaml
