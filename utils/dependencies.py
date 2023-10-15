@@ -18,12 +18,19 @@ oauth2_scheme_user = OAuth2PasswordBearer(tokenUrl="user/login")
 def get_refresh_token(
     refresh_token: Annotated[Optional[str], Cookie()] = None
 ) -> Optional[str]:
+    """
+    Get refresh token from cookie.
+    """
     return refresh_token
 
 
 async def get_id_from_token(
     refresh_token: Annotated[Optional[str], Depends(get_refresh_token)]
 ) -> int:
+    """
+    Extract id from refresh token. This function depends on the refresh
+    token to be fetched from the cookie.
+    """
     if refresh_token is None:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -37,6 +44,17 @@ async def get_id_from_token(
 
 
 async def get_id(token: str) -> int:
+    """
+    Extract ID from the token.
+
+    Params
+    ------
+      token: str: The token from which the ID is to be extracted.
+
+    Returns
+    -------
+      int: The ID extracted from the token.
+    """
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail={
