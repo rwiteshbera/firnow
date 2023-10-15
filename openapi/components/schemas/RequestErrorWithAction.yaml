@@ -1,6 +1,6 @@
 properties:
   detail:
-    $ref: .\ErrorMessageWithAction.yaml
+    $ref: ./ErrorMessageWithAction.yaml
 type: object
 required:
   - detail

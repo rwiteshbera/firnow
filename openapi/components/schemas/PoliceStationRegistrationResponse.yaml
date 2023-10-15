@@ -23,7 +23,7 @@ properties:
     format: uri
     title: Redirect
   policeStation:
-    $ref: .\PoliceStation_Pydantic.yaml
+    $ref: ./PoliceStation_Pydantic.yaml
 type: object
 required:
   - accessToken

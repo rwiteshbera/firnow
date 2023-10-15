@@ -1,6 +1,6 @@
 properties:
   detail:
-    $ref: .\ErrorMessageWithRedirect.yaml
+    $ref: ./ErrorMessageWithRedirect.yaml
 type: object
 required:
   - detail

@@ -3,7 +3,7 @@ properties:
     type: string
     title: Message
   action:
-    $ref: .\SentOtp.yaml
+    $ref: ./SentOtp.yaml
 type: object
 required:
   - message
