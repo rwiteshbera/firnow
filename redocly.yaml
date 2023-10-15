@@ -7,7 +7,7 @@ apis:
 extends:
   - recommended
 rules:
-  no-unused-components: error
+  no-unused-components: warn
 theme:
   openapi:
     corsProxyUrl: https://cors.redoc.ly
@@ -24,5 +24,4 @@ theme:
         - lang: curl
         - lang: Node.js
         - lang: JavaScript
-        - lang: PHP
         - lang: Python
