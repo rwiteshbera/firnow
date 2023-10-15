@@ -35,7 +35,7 @@ post:
     content:
       application/json:
         schema:
-          $ref: ..\components\schemas\PoliceStationRequest.yaml
+          $ref: ../components/schemas/PoliceStationRequest.yaml
     required: true
   responses:
     '201':
@@ -43,16 +43,16 @@ post:
       content:
         application/json:
           schema:
-            $ref: ..\components\schemas\PoliceStationRegistrationResponse.yaml
+            $ref: ../components/schemas/PoliceStationRegistrationResponse.yaml
     '409':
       description: Conflict Error
       content:
         application/json:
           schema:
-            $ref: ..\components\schemas\RequestErrorWithRedirect.yaml
+            $ref: ../components/schemas/RequestErrorWithRedirect.yaml
     '422':
       description: Validation Error
       content:
         application/json:
           schema:
-            $ref: ..\components\schemas\HTTPValidationError.yaml
+            $ref: ../components/schemas/HTTPValidationError.yaml
