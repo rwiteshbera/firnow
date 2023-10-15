@@ -1,7 +1,6 @@
 import uvicorn
 from fastapi import FastAPI, status
 from fastapi.exceptions import HTTPException
-from tortoise import Tortoise
 from tortoise.exceptions import DoesNotExist
 
 from models.errors import RequestError
