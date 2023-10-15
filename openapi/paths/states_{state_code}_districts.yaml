@@ -17,11 +17,13 @@ get:
         application/json:
           schema:
             $ref: ../components/schemas/DistrictList.yaml
-      example:
-        districts:
-          - district1
-          - district2
-        total: 2
+          examples:
+            Response example:
+              value:
+                districts:
+                  - district1
+                  - district2
+                total: 2
     '400':
       description: Bad Request
       content:
