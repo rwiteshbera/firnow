@@ -1,7 +1,11 @@
 openapi: 3.1.0
 info:
-  title: FastAPI
+  title: FIRNow API
   version: 0.1.0
+  license: 
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+    
 
 servers:
   - url: http://localhost:8000
@@ -9,12 +13,27 @@ servers:
 tags:
   - name: Police Station Authentication Endpoints
     x-displayName: Police Station Authentication Endpoints
+    description: Police Station Authentication Endpoints.
+
   - name: General Authentication Endpoints
     x-displayName: General Authentication Endpoints
-  - name: Location
-    x-displayName: Location
-  - name: Police Station Endpoints
-    x-displayName: Police Station Endpoints
+    description: >-
+      All the endpoints related to authentication that are general to both
+      police station and users.
+
+
+  - name: Location Endpoints
+    x-displayName: Location Endpoints
+    description: >-
+      All the endpoints related to locations like getting states, districts etc.
+
+
+  - name: General Endpoints
+    x-displayName: General Endpoints
+    description: >-
+      All the endpoints related to general stuffs like getting police
+      stations, uploading files etc.
+
 paths:
   /police-station/register:
     $ref: paths/police-station_register.yaml
@@ -76,7 +95,7 @@ x-tagGroups:
       - General Authentication Endpoints
   - name: Location
     tags:
-      - Location
+      - Location Endpoints
   - name: General
     tags:
-      - Police Station Endpoints
+      - General Endpoints
