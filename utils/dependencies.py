@@ -1,14 +1,21 @@
 import asyncio
-from typing import Annotated, Any, Optional, cast
+from typing import Annotated, Optional, cast
 
-from fastapi import Cookie, Depends, HTTPException, status
+from fastapi import Cookie, Depends, HTTPException, Request, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
+from pydantic import validator
+from requests import head
+from starlette.requests import ClientDisconnect
+from streaming_form_data import StreamingFormDataParser
+from streaming_form_data.validators import MaxSizeValidator, ValidationError
 from tortoise.exceptions import DoesNotExist
 
 from config import settings
+from models.errors import InvalidFileException, MaxBodySizeException
 from models.police_station import PoliceStation_Pydantic
 from models.tables import PoliceStation
+from models.upload_file import TemporaryUploadFile
 from routes.police_station_urls import LOGIN_URL
 
 oauth2_scheme_police = OAuth2PasswordBearer(tokenUrl="police-station/login")
@@ -108,3 +115,51 @@ async def get_police_station(
 
 # async def get_user(id: Annotated[int, Depends(get_user_id)]) -> User_Pydantic:
 #     ...
+
+
+async def get_file(request: Request) -> TemporaryUploadFile:
+    try:
+        size_validator = MaxSizeValidator(max_size=5 * 1024 * 1024)
+        file = TemporaryUploadFile(validator=size_validator)
+        parser = StreamingFormDataParser(headers=request.headers)
+        parser.register("file", file)
+
+        async for chunk in request.stream():
+            parser.data_received(chunk)
+
+        if file.content_type != "application/pdf":
+            raise InvalidFileException
+
+        return file
+
+    except ClientDisconnect:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail={
+                "message": "Client disconnected while uploading the file",
+            },
+        )
+
+    except (MaxBodySizeException, ValidationError):
+        raise HTTPException(
+            status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+            detail={
+                "message": "Maximum file size limit (5 MB) exceeded",
+            },
+        )
+
+    except InvalidFileException:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail={
+                "message": "Only PDF files are allowed.",
+            },
+        )
+
+    except Exception:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail={
+                "message": "There was an error uploading the file",
+            },
+        )
