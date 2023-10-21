@@ -1,17 +1,15 @@
 from typing import Annotated
 
 import uvicorn
-from fastapi import Depends, FastAPI, status
+from fastapi import Depends, FastAPI, UploadFile, status
 from fastapi.exceptions import HTTPException
 from tortoise.exceptions import DoesNotExist
 
+from config import Mode
 from models.errors import RequestError
 from models.police_station import PoliceStation_Pydantic
 from models.tables import PoliceStation
 from models.upload_file import TemporaryUploadFile
-from services.auth import auth_service
-from services.id import id_service
-from services.location import location_service
 from session import manage_sessions
 from utils.dependencies import get_file
 
@@ -55,15 +53,22 @@ async def get_police_station_by_id(id: int):
 
 
 @app.post("/file")
-async def upload_file(file: Annotated[TemporaryUploadFile, Depends(get_file)]):
+async def upload_file(
+    file: Annotated[TemporaryUploadFile, Depends(get_file)], _: UploadFile
+):
     filename = file.filename
     file.close()
     return {"filename": filename}
 
 
-app.mount("/auth", auth_service)
-app.mount("/id", id_service)
-app.mount("/location", location_service)
-
 if __name__ == "__main__":
-    uvicorn.run("main:app", port=8000, reload=True)
+    if Mode.DEV:
+        from services.auth import auth_service
+        from services.id import id_service
+        from services.location import location_service
+
+        app.mount("/auth", auth_service)
+        app.mount("/id", id_service)
+        app.mount("/location", location_service)
+
+    uvicorn.run("main:app", port=8000, reload=True if Mode.DEV else False)
