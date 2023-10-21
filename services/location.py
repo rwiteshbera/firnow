@@ -61,3 +61,9 @@ async def get_districts(state_code: str) -> DistrictList:
     if dist is None:
         raise HTTPException(status_code=400, detail={"message": "Invalid state code"})
     return dist
+
+
+if __name__ == "__main__":
+    import uvicorn
+
+    uvicorn.run("services.location:location_service", port=8003)
