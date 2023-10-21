@@ -1,4 +1,3 @@
-import asyncio
 from typing import Annotated
 
 from fastapi import Depends, FastAPI, Response, status
@@ -43,4 +42,4 @@ async def refresh_token(
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run("services.auth:auth_service", port=8002)
+    uvicorn.run("services.auth:auth_service", port=8001)
