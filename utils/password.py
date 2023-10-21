@@ -1,6 +1,11 @@
 import hashlib
 import os
+import re
 from base64 import b64decode, b64encode
+
+# Pattern to match the password with atleast one uppercase, one lowercase,
+# one digit and one special character.
+password_pattern = re.compile(r"(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[-+_!@#$%^&*.,?])")
 
 
 def encrypt(password: str) -> str:
