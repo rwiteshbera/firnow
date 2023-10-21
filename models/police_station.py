@@ -1,46 +1,11 @@
-import re
 from datetime import datetime
-from typing import Annotated
-
-from fastapi import status
-from fastapi.exceptions import HTTPException
 from pydantic import ConfigDict, EmailStr, Field, HttpUrl
-from pydantic.functional_validators import AfterValidator
+
 from tortoise.contrib.pydantic.creator import pydantic_model_creator
 
 from models.auth import AccessToken
 from models.tables import PoliceStation
-
-# Pattern to match the password with atleast one uppercase, one lowercase,
-# one digit and one special character.
-password_pattern = re.compile(r"(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[-+_!@#$%^&*.,?])")
-
-
-def check_length(password: str) -> str:
-    if not 8 <= len(password) <= 1024:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail={
-                "message": "Password must be atleast 8 characters long.",
-            },
-        )
-    return password
-
-
-def check_password(password: str) -> str:
-    if not bool(password_pattern.match(password)):
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail={
-                "message": "Password must contain atleast one uppercase, one lowercase, one digit and one special character.",
-            },
-        )
-    return password
-
-
-PasswordType = Annotated[
-    str, AfterValidator(check_length), AfterValidator(check_password)
-]
+from utils.validators import PasswordType
 
 
 class PoliceStationRequest(
