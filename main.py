@@ -12,10 +12,10 @@ from models.upload_file import TemporaryUploadFile
 from services.auth import auth_service
 from services.id import id_service
 from services.location import location_service
-from session import manage_session
+from session import manage_sessions
 from utils.dependencies import get_file
 
-app = FastAPI(lifespan=manage_session, prefix="/main")
+app = FastAPI(lifespan=manage_sessions)
 
 
 @app.get(

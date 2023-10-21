@@ -26,7 +26,7 @@ class SingletonSession:
 
 
 @asynccontextmanager
-async def manage_session(app: FastAPI):
+async def manage_sessions(app: FastAPI):
     await RedisClient.get_client()
     SingletonSession.get_session()
     await Tortoise.init(
@@ -38,3 +38,4 @@ async def manage_session(app: FastAPI):
     yield
     await SingletonSession.close_session()
     await Tortoise.close_connections()
+    await RedisClient.close_client()
