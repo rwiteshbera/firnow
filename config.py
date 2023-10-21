@@ -12,7 +12,9 @@ class Mode(Enum):
 
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
+    model_config = SettingsConfigDict(
+        case_sensitive=True, env_file=".env", env_file_encoding="utf-8"
+    )
 
     ACCESS_TOKEN_EXPIRE_HOURS: int = 24
     APP_CREATION_DATE: datetime = datetime(2021, 1, 1)
@@ -23,7 +25,7 @@ class Settings(BaseSettings):
     JWT_SECRET_KEY: str = (
         "37401a016623f5f320bda74c83063d32ebc4bf5417bd5dbf99aa4f0afbf4cb02"
     )
-    MODE: Mode = Mode.DEV
+    MODE: Mode = Mode.PROD
     NODE_ID: int = 0
     POSTGRES_URL: PostgresDsn = PostgresDsn(
         "postgresql://postgres:postgres@localhost:5432/postgres"
