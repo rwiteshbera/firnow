@@ -44,4 +44,4 @@ def get_id() -> Snowflake:
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run("services.id:id_service", port=8001)
+    uvicorn.run("services.id:id_service", port=8002)
