@@ -27,3 +27,13 @@ class RequestErrorWithAction(BaseModel):
 
 class PoliceStationNotFound(Exception):
     pass
+
+
+class MaxBodySizeException(Exception):
+    def __init__(self, body_len: int):
+        self.body_len = body_len
+        super().__init__()
+
+
+class InvalidFileException(Exception):
+    pass
