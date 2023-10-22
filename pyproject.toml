@@ -20,6 +20,8 @@ pydantic-settings = "^2.0.3"
 streaming-form-data = "^1.13.0"
 aiofiles = "^23.2.1"
 python-multipart = "^0.0.6"
+w3storage = "^0.0.1"
+typing-extensions = "^4.8.0"
 
 
 [tool.poetry.group.dev.dependencies]
