@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: FIRNow API
-  version: 0.1.0
+  version: 1.0.0
   license: 
     name: MIT
     url: https://opensource.org/licenses/MIT
@@ -9,6 +9,10 @@ info:
 
 servers:
   - url: https://api.firnow.duckdns.org
+    description: Production
+
+  - url: http://127.0.0.1:8000
+    description: Development
   
 tags:
   - name: Police Station Authentication Endpoints
@@ -37,49 +41,55 @@ tags:
 paths:
   /police-station/register:
     $ref: paths/police-station_register.yaml
-    servers:
-      - url: &auth_endpoint https://api.firnow.duckdns.org/auth
+    servers: &auth_endpoint
+      - url: https://api.firnow.duckdns.org/auth
+        description: Production
+
+      - url: http://127.0.0.1:8000/auth
+        description: Development
 
   /police-station/login:
     $ref: paths/police-station_login.yaml
-    servers:
-      - url: *auth_endpoint
+    servers: *auth_endpoint
 
   /police-station/verify-email:
     $ref: paths/police-station_verify-email.yaml
-    servers:
-      - url: *auth_endpoint
+    servers: *auth_endpoint
 
   /police-station/send-otp:
     $ref: paths/police-station_send-otp.yaml
-    servers:
-      - url: *auth_endpoint
+    servers: *auth_endpoint
 
   /refresh:
     $ref: paths/refresh.yaml
-    servers:
-      - url: *auth_endpoint
+    servers: *auth_endpoint
 
   /states:
     $ref: paths/states.yaml
-    servers:
-      - url: &location_endpoint https://api.firnow.duckdns.org/location
+    servers: &location_endpoint
+      - url: https://api.firnow.duckdns.org/location
+        description: Production
+
+      - url: http://127.0.0.1:8000/location
+        description: Development
 
   /states/{state_code}:
     $ref: paths/states_{state_code}.yaml
-    servers:
-      - url: *location_endpoint
+    servers: *location_endpoint
 
   /states/{state_code}/districts:
     $ref: paths/states_{state_code}_districts.yaml
-    servers:
-      - url: *location_endpoint
+    servers: *location_endpoint
 
   /police-stations:
     $ref: paths/police-stations.yaml
 
   /police-stations/{id}:
     $ref: paths/police-stations_{id}.yaml
+  
+  /upload:
+    $ref: paths/upload.yaml
+
 
 components:
   securitySchemes:
@@ -95,9 +105,11 @@ x-tagGroups:
     tags:
       - Police Station Authentication Endpoints
       - General Authentication Endpoints
+
   - name: Location
     tags:
       - Location Endpoints
+      
   - name: General
     tags:
       - General Endpoints
