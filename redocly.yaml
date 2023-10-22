@@ -10,8 +10,9 @@ rules:
   no-unused-components: warn
 theme:
   openapi:
-    corsProxyUrl: https://cors.redoc.ly
     hideLogo: true
+    layout: stacked
+    defaultSampleLanguage: 'JavaScript'
     hideDownloadButton: true
     htmlTemplate: ./docs/index.html
     theme:
