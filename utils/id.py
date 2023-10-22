@@ -1,7 +1,7 @@
 from aiohttp import ClientSession
 
-from session import SingletonSession
 from config import settings
+from session import SingletonSession
 
 
 async def get_id() -> int:
