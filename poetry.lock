@@ -2201,6 +2201,20 @@ docs = ["Sphinx (>=4.1.2,<4.2.0)", "sphinx-rtd-theme (>=0.5.2,<0.6.0)", "sphinxc
 test = ["Cython (>=0.29.32,<0.30.0)", "aiohttp", "flake8 (>=3.9.2,<3.10.0)", "mypy (>=0.800)", "psutil", "pyOpenSSL (>=22.0.0,<22.1.0)", "pycodestyle (>=2.7.0,<2.8.0)"]
 
 [[package]]
+name = "w3storage"
+version = "0.0.1"
+description = "A Python client for https://web3.storage"
+optional = false
+python-versions = "*"
+files = [
+    {file = "w3storage-0.0.1-py3-none-any.whl", hash = "sha256:c600a683742a72f9c29780ecddc6698f69580a2a546a32c0ab67678b07a71208"},
+    {file = "w3storage-0.0.1.tar.gz", hash = "sha256:04b6946e5a4b0be9b3e867992b84450425564fd93e98e4d30afe70315251c69c"},
+]
+
+[package.dependencies]
+requests = "*"
+
+[[package]]
 name = "watchfiles"
 version = "0.20.0"
 description = "Simple, modern and high performance file watching and code reload in python."
@@ -2403,4 +2417,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "3b12d8e2b58c90513564f4dc598fdb37f251a096e24cdc626b44d0d4e67f1dde"
+content-hash = "18542e814a62d9504e09852b0d75e057b5e5f1f3f1b6068f617549bf89321b8a"
