@@ -8,7 +8,7 @@ info:
     
 
 servers:
-  - url: http://localhost:8000
+  - url: https://api.firnow.duckdns.org
   
 tags:
   - name: Police Station Authentication Endpoints
@@ -38,45 +38,46 @@ paths:
   /police-station/register:
     $ref: paths/police-station_register.yaml
     servers:
-      - url: http://localhost:8000/auth
+      - url: &auth_endpoint https://api.firnow.duckdns.org/auth
 
   /police-station/login:
     $ref: paths/police-station_login.yaml
     servers:
-      - url: http://localhost:8000/auth
+      - url: *auth_endpoint
 
   /police-station/verify-email:
     $ref: paths/police-station_verify-email.yaml
     servers:
-      - url: http://localhost:8000/auth
+      - url: *auth_endpoint
 
   /police-station/send-otp:
     $ref: paths/police-station_send-otp.yaml
     servers:
-      - url: http://localhost:8000/auth
+      - url: *auth_endpoint
 
   /refresh:
     $ref: paths/refresh.yaml
     servers:
-      - url: http://localhost:8000/auth
+      - url: *auth_endpoint
 
   /states:
     $ref: paths/states.yaml
     servers:
-      - url: http://localhost:8000/location
+      - url: &location_endpoint https://api.firnow.duckdns.org/location
 
   /states/{state_code}:
     $ref: paths/states_{state_code}.yaml
     servers:
-      - url: http://localhost:8000/location
+      - url: *location_endpoint
 
   /states/{state_code}/districts:
     $ref: paths/states_{state_code}_districts.yaml
     servers:
-      - url: http://localhost:8000/location
+      - url: *location_endpoint
 
   /police-stations:
     $ref: paths/police-stations.yaml
+
   /police-stations/{id}:
     $ref: paths/police-stations_{id}.yaml
 
@@ -88,6 +89,7 @@ components:
         password:
           scopes: {}
           tokenUrl: police-station/login
+          
 x-tagGroups:
   - name: Authentication
     tags:
