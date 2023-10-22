@@ -1,19 +1,44 @@
+import asyncio
 from typing import Annotated
 
 import uvicorn
-from fastapi import Depends, FastAPI, UploadFile, status
+from fastapi import Depends, FastAPI, status
 from fastapi.exceptions import HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from tortoise.exceptions import DoesNotExist
+from typing_extensions import TypedDict
 
-from config import Mode
+from config import Mode, settings
+from databases.web3 import w3
+from dependencies.upload import get_file
 from models.errors import RequestError
 from models.police_station import PoliceStation_Pydantic
 from models.tables import PoliceStation
 from models.upload_file import TemporaryUploadFile
 from session import manage_sessions
-from utils.dependencies import get_file
 
 app = FastAPI(lifespan=manage_sessions)
+
+if settings.MODE == Mode.DEV:
+    print("Running in development mode")
+    from services.auth import auth_service
+    from services.id import id_service
+    from services.location import location_service
+
+    app.mount("/auth", auth_service)
+    app.mount("/id", id_service)
+    app.mount("/location", location_service)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://127.0.0.1:8080",
+        "https://api.firnow.duckdns.org/docs",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get(
@@ -52,21 +77,35 @@ async def get_police_station_by_id(id: int):
         )
 
 
-@app.post("/file")
-async def upload_file(file: Annotated[TemporaryUploadFile, Depends(get_file)]):
-    filename = file.filename
-    file.close()
-    return {"filename": filename}
+@app.post(
+    "/upload",
+    responses={
+        status.HTTP_200_OK: {
+            "model": TypedDict("UploadResponse", {"cid": str}),
+        },
+        status.HTTP_400_BAD_REQUEST: {
+            "model": RequestError,
+        },
+        status.HTTP_413_REQUEST_ENTITY_TOO_LARGE: {
+            "model": RequestError,
+        },
+        status.HTTP_422_UNPROCESSABLE_ENTITY: {
+            "model": RequestError,
+        },
+        status.HTTP_500_INTERNAL_SERVER_ERROR: {
+            "model": RequestError,
+        },
+    },
+)
+async def upload_file(temp_file: Annotated[TemporaryUploadFile, Depends(get_file)]):
+    fir_cid: str = await asyncio.to_thread(
+        w3.post_upload, (temp_file.filename, temp_file.file)
+    )
+    temp_file.close()
+    return {"cid": fir_cid}
 
 
 if __name__ == "__main__":
-    if Mode.DEV:
-        from services.auth import auth_service
-        from services.id import id_service
-        from services.location import location_service
-
-        app.mount("/auth", auth_service)
-        app.mount("/id", id_service)
-        app.mount("/location", location_service)
-
-    uvicorn.run("main:app", port=8000, reload=True if Mode.DEV else False)
+    uvicorn.run(
+        "main:app", port=8000, reload=True if settings.MODE == Mode.DEV else False
+    )
