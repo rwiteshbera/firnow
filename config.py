@@ -20,7 +20,7 @@ class Settings(BaseSettings):
     APP_CREATION_DATE: datetime = datetime(2021, 1, 1)
     APP_HOST: HttpUrl = HttpUrl("http://127.0.0.1:8000")
     FIRESTORE_CERT: FilePath = Path("cert.json")
-    INTERNAL_ID_SERVER: HttpUrl = HttpUrl(f"{APP_HOST}/id")
+    INTERNAL_ID_SERVER: HttpUrl = HttpUrl(f"{APP_HOST}id")
     JWT_ALGORITHM: str = "HS256"
     JWT_SECRET_KEY: str = (
         "37401a016623f5f320bda74c83063d32ebc4bf5417bd5dbf99aa4f0afbf4cb02"
