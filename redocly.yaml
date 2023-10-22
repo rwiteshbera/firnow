@@ -13,7 +13,6 @@ theme:
     corsProxyUrl: https://cors.redoc.ly
     hideLogo: true
     hideDownloadButton: true
-    layout: stacked
     htmlTemplate: ./docs/index.html
     theme:
       colors:
