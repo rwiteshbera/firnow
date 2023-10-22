@@ -8,6 +8,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 
 from config import settings
 from databases.redis import RedisClient
+from dependencies.auth import get_police_station
 from models.auth import (
     InvalidOtp,
     InvalidOtpResponse,
@@ -30,7 +31,6 @@ from models.police_station import (
 )
 from models.tables import PoliceStation
 from routes.police_station_urls import *
-from utils.dependencies import get_police_station
 from utils.id import get_id
 from utils.otp import generate_otp, send_otp
 from utils.password import encrypt, verify_password
@@ -218,7 +218,7 @@ async def verify_police_station_email(
     """
     if unverified.verified:
         return VerifiedOtpResponse(
-            message="Email already verified",
+            message="Email is already verified",
             redirect=POLICE_STATION_DASHBOARD_URL,
         )
 
@@ -278,6 +278,12 @@ async def send_otp_police_station(
     Send OTP to the email address associated with the police-station account.
     This is a protected endpoint and requires the `accessToken` to be sent as a ***bearer token***.
     """
+    if unverified.verified:
+        return VerifiedOtpResponse(
+            message="Email is already verified",
+            redirect=POLICE_STATION_DASHBOARD_URL,
+        )
+
     otp = generate_otp(6)
     # send otp to email
     redis = await RedisClient.get_client()
