@@ -2,10 +2,10 @@ from typing import Annotated
 
 from fastapi import Depends, FastAPI, Response, status
 
+from dependencies.auth import get_id_from_token
 from models.auth import AccessToken
 from models.errors import RequestErrorWithRedirect
 from routes import police_station
-from utils.dependencies import get_id_from_token
 from utils.token import get_access_token_obj
 
 auth_service = FastAPI()
