@@ -53,9 +53,7 @@ async def get_police_station_by_id(id: int):
 
 
 @app.post("/file")
-async def upload_file(
-    file: Annotated[TemporaryUploadFile, Depends(get_file)], _: UploadFile
-):
+async def upload_file(file: Annotated[TemporaryUploadFile, Depends(get_file)]):
     filename = file.filename
     file.close()
     return {"filename": filename}
