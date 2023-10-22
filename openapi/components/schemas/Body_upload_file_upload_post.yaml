@@ -1,0 +1,9 @@
+type: object
+properties: 
+  file:
+    type: string
+    format: binary
+    title: File
+required: 
+  - file
+title: Body_upload_file_upload_post
