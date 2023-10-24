@@ -12,7 +12,7 @@ from config import Mode, settings
 from databases.web3 import w3
 from dependencies.upload import get_file
 from models.errors import RequestError
-from models.police_station import PoliceStation_Pydantic
+from models.police_station import PoliceStationSearched_Pydantic
 from models.tables import PoliceStation
 from models.upload_file import TemporaryUploadFile
 from session import init
@@ -44,13 +44,13 @@ app.add_middleware(
 @app.get(
     "/police-stations",
     summary="Get all registered police stations",
-    response_model=list[PoliceStation_Pydantic],
+    response_model=list[PoliceStationSearched_Pydantic],
     tags=["Police Station Endpoints"],
 )
 async def get_police_station(
     state: Optional[str] = None, district: Optional[str] = None
 ):
-    police_stations = PoliceStation.all()
+    police_stations = PoliceStation.all().filter(verified=True)
 
     if state:
         police_stations = police_stations.filter(state=state)
@@ -58,13 +58,13 @@ async def get_police_station(
         police_stations = police_stations.filter(district=district)
 
     police_stations = police_stations.order_by("state", "district")
-    return await PoliceStation_Pydantic.from_queryset(police_stations)
+    return await PoliceStationSearched_Pydantic.from_queryset(police_stations)
 
 
 @app.get(
     "/police-stations/{id}",
     summary="Get a police station by id",
-    response_model=PoliceStation_Pydantic,
+    response_model=PoliceStationSearched_Pydantic,
     responses={
         status.HTTP_404_NOT_FOUND: {
             "model": RequestError,
@@ -75,7 +75,7 @@ async def get_police_station(
 async def get_police_station_by_id(id: int):
     try:
         police_station = await PoliceStation.get(id=id)
-        return await PoliceStation_Pydantic.from_tortoise_orm(police_station)
+        return await PoliceStationSearched_Pydantic.from_tortoise_orm(police_station)
 
     except DoesNotExist:
         raise HTTPException(
