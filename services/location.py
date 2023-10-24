@@ -1,12 +1,24 @@
 from typing import Optional, cast
 
 from fastapi import FastAPI, HTTPException, status
+from fastapi.middleware.cors import CORSMiddleware
 
 from databases.firestore import db
 from models.errors import RequestError
 from models.location import DistrictList, State
+from session import init
 
-location_service = FastAPI()
+location_service = FastAPI(lifespan=init)
+location_service.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://127.0.0.1:8080",
+        "https://api.firnow.duckdns.org",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @location_service.get(
