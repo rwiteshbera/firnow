@@ -1,13 +1,13 @@
 properties:
   name:
     type: string
-    title: Name
+    description: Name of the state
   code:
     type: string
-    title: Code
+    description: Code of the state in ISO 3166-2 format
   country:
     type: string
-    title: Country
+    description: Code of the country in alpha-2 format
 type: object
 required:
   - name

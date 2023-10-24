@@ -1,13 +1,14 @@
 properties:
   message:
     type: string
-    title: Message
+    description: The message sent to the user
   redirect:
     type: string
     maxLength: 2083
     minLength: 1
     format: uri
-    title: Redirect
+    description: >-
+      The URL to be used to redirect the user after successful verification
 type: object
 required:
   - message

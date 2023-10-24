@@ -1,7 +1,7 @@
 properties:
   message:
     type: string
-    title: Message
+    description: The message sent to the user
   action:
     $ref: ./SentOtp.yaml
 type: object

@@ -5,7 +5,7 @@ post:
   summary: Login to an existing police station account
   description: >-
     Login to an existing police station account. The request payload should be
-    sent as a form data with the following fields:
+    sent as a form data with the following fields according to OpenAPI standard:
 
     - **username:** Email ID of the police station
 

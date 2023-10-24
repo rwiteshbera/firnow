@@ -3,7 +3,7 @@ properties:
   file:
     type: string
     format: binary
-    title: File
+    description: FIR file to be uploaded
 required: 
   - file
 title: Body_upload_file_upload_post

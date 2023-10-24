@@ -1,7 +1,8 @@
 properties:
   otp:
     type: string
-    title: Otp
+    description: >-
+      The OTP sent to the user
 type: object
 required:
   - otp

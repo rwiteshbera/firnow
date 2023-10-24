@@ -2,7 +2,14 @@ get:
   security: []
   tags:
     - Location Endpoints
-  summary: Get the state by state code
+  summary: Get a particular state by the state-code
+  description: >-
+    Returns a particular state by state code. For now
+    only states of India are supported. The state code
+    is the `ISO 3166-2:IN` code of the state. For example,
+    the state code of Andhra Pradesh is `IN-AP`. The state
+    code is *case sensitive*. 
+
   operationId: get_state_states__state_code__get
   parameters:
     - name: state_code
@@ -10,7 +17,8 @@ get:
       required: true
       schema:
         type: string
-        title: State Code
+      description: >- 
+        `ISO 3166-2:IN` code of the state.
   responses:
     '200':
       description: Successful Response

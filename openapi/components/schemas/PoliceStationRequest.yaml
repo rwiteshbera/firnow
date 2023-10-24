@@ -2,22 +2,22 @@ properties:
   district:
     type: string
     maxLength: 256
-    title: District
+    description: District where the police station is located
   email:
     type: string
     format: email
-    title: Email
+    description: Email address of the police station
   name:
     type: string
     maxLength: 256
-    title: Name
+    description: Name of the police station
   state:
     type: string
     maxLength: 256
-    title: State
+    description: State where the police station is located
   password:
     type: string
-    title: Password
+    description: Password of the police station account
 additionalProperties: false
 type: object
 required:

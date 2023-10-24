@@ -2,7 +2,11 @@ get:
   security: []
   tags:
     - General Endpoints
-  summary: Get a police station by id
+  summary: Get the police-station by ID
+  description: >-
+    Get a police station by `id`. The `id` is unique integer helped
+    to identify a police station. The `id` of police station can be 
+    obtained from `/police-stations` endpoint.
   operationId: get_police_station_by_id_police_stations__id__get
   parameters:
     - name: id
@@ -10,14 +14,14 @@ get:
       required: true
       schema:
         type: integer
-        title: Id
+      description: The `id` of the police station to retrieve.
   responses:
     '200':
       description: Successful Response
       content:
         application/json:
           schema:
-            $ref: ../components/schemas/PoliceStation_Pydantic.yaml
+            $ref: ../components/schemas/PoliceStationSearched_Pydantic.yaml
     '404':
       content:
         application/json:

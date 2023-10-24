@@ -2,7 +2,7 @@ post:
   security: []
   tags:
     - Police Station Authentication Endpoints
-  summary: Register a new police station
+  summary: Register a new police-station
   description: >-
     Register a new police station. The request body should contain the following
     fields:

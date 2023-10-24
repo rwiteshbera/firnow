@@ -3,7 +3,7 @@ get:
     - OAuth2PasswordBearer: []
   tags:
     - General Authentication Endpoints
-  summary: Refresh access token
+  summary: Refresh Access Token
   description: |-
     This endpoint is used to refresh the access token.
     It requires `refresh_token` cookie to be set.
@@ -13,9 +13,9 @@ get:
       in: cookie
       required: true
       schema:
-        anyOf:
-          - type: string
-        title: Refresh Token
+        type: string
+        description: >-
+          `refresh_token` to be used to refresh the access token
   responses:
     '200':
       description: Successful Response

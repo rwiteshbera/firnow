@@ -3,10 +3,10 @@ properties:
     items:
       type: string
     type: array
-    title: Districts
+    description: List of districts in the state
   total:
     type: integer
-    title: Total
+    description: Total number of districts
 type: object
 required:
   - districts

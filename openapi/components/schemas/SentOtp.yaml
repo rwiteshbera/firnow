@@ -4,7 +4,8 @@ properties:
     maxLength: 2083
     minLength: 1
     format: uri
-    title: Verifyotp
+    description: >-
+      The URL to be used to verify the OTP
 type: object
 required:
   - verifyOtp

@@ -6,7 +6,7 @@ get:
     Send OTP to the email address associated with the police-station account.
 
     This is a protected endpoint and requires the `accessToken` to be sent as a
-    ***bearer token***.
+    *bearer token*.
   operationId: send_otp_police_station_police_station_send_otp_get
   responses:
     '200':

@@ -2,7 +2,12 @@ get:
   security: []
   tags:
     - Location Endpoints
-  summary: Get all states of the country
+  summary: Get all states of a country
+  description: >-
+    Returns all the states of the country. For now
+    only states of India are supported. By default it
+    returns all the states of India.
+    
   operationId: get_states_states_get
   responses:
     '200':

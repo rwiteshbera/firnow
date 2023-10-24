@@ -2,34 +2,31 @@ properties:
   district:
     type: string
     maxLength: 256
-    title: District
+    description: District where the police station is located
   email:
     type: string
     format: email
-    title: Email
+    description: Email address of the police station
   id:
     type: integer
     maximum: 9223372036854776000
     minimum: 1
-    title: Id
+    description: Unique ID of the police station
   name:
     type: string
     maxLength: 256
-    title: Name
+    description: Name of the police station
   state:
     type: string
     maxLength: 256
-    title: State
+    description: State where the police station is located
   updatedAt:
     type: string
     format: date-time
-    title: Updatedat
+    description: Last time the police station was updated
   verified:
-    anyOf:
-      - type: boolean
-      - type: 'null'
-    title: Verified
-    default: false
+    type: boolean
+    description: Whether the police station is verified or not
 additionalProperties: false
 type: object
 required:
@@ -39,4 +36,5 @@ required:
   - name
   - state
   - updatedAt
+  - verified
 title: PoliceStation_Pydantic

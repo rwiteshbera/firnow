@@ -6,7 +6,7 @@ post:
     Verify the police station email. The request body should contain the
     following fields:
 
-    - **otp:** OTP sent to the police station email
+    - **otp:** OTP sent to the police-station email
 
 
     **Example:**

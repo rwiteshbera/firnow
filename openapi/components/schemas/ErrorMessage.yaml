@@ -1,7 +1,7 @@
 properties:
   message:
     type: string
-    title: Message
+    description: Message describing the error
 type: object
 required:
   - message

@@ -2,10 +2,10 @@ post:
   security: []
   tags: 
     - General Endpoints
-  summary: Upload FIR file to the server.
+  summary: Upload the FIR file
   description: >-
     The FIR file must be in a PDF format and the content should be sent as a
-    multipart form data. The maximum file size allowed is 5 MB.
+    `multipart/form-data`. The maximum file size allowed is 5 MB.
 
   operationId: "upload_file_upload_post"
   requestBody: 
