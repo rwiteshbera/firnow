@@ -1,10 +1,11 @@
 import asyncio
 from typing import Annotated, Optional, cast
 
-from fastapi import APIRouter, Body, Depends, Response, status
+from fastapi import APIRouter, BackgroundTasks, Body, Depends, Response, status
 from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
+from tortoise.exceptions import DoesNotExist
 
 from config import settings
 from databases.redis import RedisClient
@@ -13,11 +14,13 @@ from models.auth import (
     InvalidOtp,
     InvalidOtpResponse,
     OtpRequest,
+    ResetPasswordPayload,
     SentOtp,
     SentOtpResponse,
     VerifiedOtpResponse,
 )
 from models.errors import (
+    ErrorMessage,
     PoliceStationNotFound,
     RequestError,
     RequestErrorWithAction,
@@ -32,6 +35,11 @@ from models.police_station import (
 from models.tables import PoliceStation
 from routes.police_station_urls import *
 from utils.id import get_id
+from utils.mail import (
+    send_otp_message,
+    send_reset_password_message,
+    send_welcome_message,
+)
 from utils.otp import generate_otp, send_otp
 from utils.password import encrypt, verify_password
 from utils.token import get_access_token_obj
@@ -204,6 +212,7 @@ async def login_police_station(
 async def verify_police_station_email(
     unverified: Annotated[PoliceStation, Depends(get_police_station)],
     body: OtpRequest,
+    background_tasks: BackgroundTasks,
 ):
     """
     Verify the police station email. The request body should contain the following fields:
@@ -242,6 +251,9 @@ async def verify_police_station_email(
         await PoliceStation.select_for_update().filter(id=unverified.id).update(
             verified=True
         )
+
+        background_tasks.add_task(send_welcome_message, unverified.email)
+
         return VerifiedOtpResponse(
             message="Email verified successfully",
             redirect=POLICE_STATION_DASHBOARD_URL,
@@ -272,7 +284,8 @@ async def verify_police_station_email(
     },
 )
 async def send_otp_police_station(
-    unverified: Annotated[PoliceStation, Depends(get_police_station)]
+    unverified: Annotated[PoliceStation, Depends(get_police_station)],
+    background_tasks: BackgroundTasks,
 ):
     """
     Send OTP to the email address associated with the police-station account.
@@ -285,10 +298,49 @@ async def send_otp_police_station(
         )
 
     otp = generate_otp(6)
+
     # send otp to email
+    background_tasks.add_task(send_otp_message, unverified.email, otp)
+
     redis = await RedisClient.get_client()
     await redis.set(f"otp:{unverified.id}", otp, ex=60 * 5)
     return SentOtpResponse(
         message="OTP sent successfully",
         action=SentOtp(verifyOtp=VERIFY_EMAIL_URL),
     )
+
+
+@router.post(
+    "/send-reset-password-link",
+    tags=["General Authentication Endpoints"],
+    summary="Reset password",
+    responses={
+        status.HTTP_200_OK: {
+            "description": "Successful Response",
+            "model": ErrorMessage,
+        },
+    },
+)
+async def reset_password(
+    response: Response,
+    payload: Annotated[ResetPasswordPayload, Body()],
+    background_tasks: BackgroundTasks,
+):
+    try:
+        police_station = await PoliceStation.get(email=payload.email)
+        token_obj = await get_access_token_obj(police_station.id, response)
+        url: str = f"{RESET_PASSWORD_URL}?token={token_obj.access_token}"
+        background_tasks.add_task(
+            send_reset_password_message,
+            police_station.email,
+            police_station.name,
+            url,
+        )
+
+        redis = await RedisClient.get_client()
+        await redis.set(f"reset_password:{token_obj.access_token}", 1, ex=24 * 60 * 60)
+
+    except DoesNotExist:
+        pass
+
+    return {"message": "If the email exists, a reset password link will been sent."}
