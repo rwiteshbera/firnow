@@ -16,27 +16,36 @@ servers:
   
 tags:
   - name: Police Station Authentication Endpoints
-    x-displayName: Police Station Authentication Endpoints
-    description: Police Station Authentication Endpoints.
+    description: >-
+      All the endpoints related to authentication that are specific to police
+      station:
+        - Registering the police-station
+        - Logging in to the police-station portal
+        - Verifying email of the police-station
+        - Sending OTP to the police-station email
 
   - name: General Authentication Endpoints
-    x-displayName: General Authentication Endpoints
     description: >-
       All the endpoints related to authentication that are general to both
-      police station and users.
+      police station and users:
+        - Refreshing access token
 
 
   - name: Location Endpoints
-    x-displayName: Location Endpoints
     description: >-
-      All the endpoints related to locations like getting states, districts etc.
+      All the endpoints related to locations:
+        - Get all the states
+        - Get a particular state using `state_code`
+        - Get all the districts of a state
 
 
   - name: General Endpoints
-    x-displayName: General Endpoints
     description: >-
-      All the endpoints related to general stuffs like getting police
+      All the endpoints related to general stuffs like: getting police
       stations, uploading files etc.
+        - Get all the police stations (by state and/or district)
+        - Get a particular police station using `id`
+        - Upload FIR reports as PDF files
 
 paths:
   /police-station/register:
