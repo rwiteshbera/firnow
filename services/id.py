@@ -1,4 +1,5 @@
 import time
+from csv import list_dialects
 from datetime import datetime
 
 from fastapi import FastAPI, HTTPException, status
@@ -6,8 +7,11 @@ from fastapi import FastAPI, HTTPException, status
 from config import settings
 from models.auth import Snowflake
 from models.errors import RequestError
+from session import init
 
-id_service = FastAPI()
+id_service = FastAPI(lifespan=init)
+
+
 creation_date: datetime = settings.APP_CREATION_DATE
 previous_offset: int = 0
 node_id: int = settings.NODE_ID
