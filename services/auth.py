@@ -1,14 +1,28 @@
 from typing import Annotated
 
-from fastapi import Depends, FastAPI, Response, status
+from fastapi import Body, Depends, FastAPI, Response, status
+from fastapi.middleware.cors import CORSMiddleware
 
 from dependencies.auth import get_id_from_token
 from models.auth import AccessToken
 from models.errors import RequestErrorWithRedirect
 from routes import police_station
+from session import init
 from utils.token import get_access_token_obj
 
-auth_service = FastAPI()
+auth_service = FastAPI(lifespan=init)
+
+auth_service.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://127.0.0.1:8080",
+        "https://api.firnow.duckdns.org",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 auth_service.include_router(police_station.router)
 
 
