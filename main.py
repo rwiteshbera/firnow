@@ -1,5 +1,5 @@
 import asyncio
-from typing import Annotated
+from typing import Annotated, Optional
 
 import uvicorn
 from fastapi import Depends, FastAPI, status
@@ -15,9 +15,9 @@ from models.errors import RequestError
 from models.police_station import PoliceStation_Pydantic
 from models.tables import PoliceStation
 from models.upload_file import TemporaryUploadFile
-from session import manage_sessions
+from session import init
 
-app = FastAPI(lifespan=manage_sessions)
+app = FastAPI(lifespan=init)
 
 if settings.MODE == Mode.DEV:
     print("Running in development mode")
@@ -33,7 +33,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://127.0.0.1:8080",
-        "https://api.firnow.duckdns.org/docs",
+        "https://api.firnow.duckdns.org",
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -47,8 +47,17 @@ app.add_middleware(
     response_model=list[PoliceStation_Pydantic],
     tags=["Police Station Endpoints"],
 )
-async def get_police_station():
-    police_stations = PoliceStation.all().order_by("state", "district")
+async def get_police_station(
+    state: Optional[str] = None, district: Optional[str] = None
+):
+    police_stations = PoliceStation.all()
+
+    if state:
+        police_stations = police_stations.filter(state=state)
+    if district:
+        police_stations = police_stations.filter(district=district)
+
+    police_stations = police_stations.order_by("state", "district")
     return await PoliceStation_Pydantic.from_queryset(police_stations)
 
 
@@ -96,6 +105,7 @@ async def get_police_station_by_id(id: int):
             "model": RequestError,
         },
     },
+    tags=["File Uploading Endpoint"],
 )
 async def upload_file(temp_file: Annotated[TemporaryUploadFile, Depends(get_file)]):
     fir_cid: str = await asyncio.to_thread(
