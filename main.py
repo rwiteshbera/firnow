@@ -106,6 +106,24 @@ async def get_police_station_by_id(id: int):
         },
     },
     tags=["File Uploading Endpoint"],
+    openapi_extra={
+        "requestBody": {
+            "content": {
+                "multipart/form-data": {
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "file": {
+                                "type": "string",
+                                "format": "binary",
+                            },
+                        },
+                    },
+                },
+            },
+            "required": True,
+        }
+    },
 )
 async def upload_file(temp_file: Annotated[TemporaryUploadFile, Depends(get_file)]):
     fir_cid: str = await asyncio.to_thread(
