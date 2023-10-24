@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from pydantic import BaseModel, ConfigDict, HttpUrl
+from pydantic import BaseModel, ConfigDict, EmailStr, HttpUrl
 from pydantic.alias_generators import to_camel
 
 from models.action import InvalidOtp, SentOtp
@@ -33,6 +33,10 @@ class AccessToken(BaseModel):
     token_type: str = "bearer"
     refresh_after: datetime
     refresh_url: HttpUrl
+
+
+class ResetPasswordPayload(BaseModel):
+    email: EmailStr
 
 
 class Snowflake(BaseModel):
