@@ -1,6 +1,6 @@
 from datetime import datetime
-from pydantic import ConfigDict, EmailStr, Field, HttpUrl
 
+from pydantic import ConfigDict, EmailStr, Field, HttpUrl
 from tortoise.contrib.pydantic.creator import pydantic_model_creator
 
 from models.auth import AccessToken
@@ -31,6 +31,17 @@ class PoliceStation_Pydantic(
     model_config = ConfigDict(populate_by_name=True)
     email: EmailStr
     updated_at: datetime = Field(..., alias="updatedAt")
+
+
+class PoliceStationSearched_Pydantic(
+    pydantic_model_creator(
+        PoliceStation,
+        name="PoliceStationSearched_Pydantic",
+        exclude=("password", "email", "updated_at", "verified"),
+        sort_alphabetically=True,
+    )
+):
+    pass
 
 
 class PoliceStationResponse(AccessToken):
