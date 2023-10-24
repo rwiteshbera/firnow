@@ -14,7 +14,7 @@ theme:
     layout: stacked
     defaultSampleLanguage: 'JavaScript'
     hideDownloadButton: true
-    htmlTemplate: ./docs/index.html
+    htmlTemplate: ./templates/index.html
     theme:
       colors:
         primary:
