@@ -4,6 +4,19 @@ get:
     - General Endpoints
   summary: Get all registered police stations
   operationId: get_police_station_police_stations_get
+  parameters: 
+    - name: state
+      in: query
+      required: false
+      schema: 
+        type: "string"
+        title: State
+    - name: district
+      in: query
+      required: false
+      schema: 
+        type: string
+        title: District
   responses:
     '200':
       description: Successful Response
