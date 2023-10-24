@@ -30,7 +30,7 @@ async def get_access_token_obj(id: int, response: Response) -> AccessToken:
     refresh_token = await asyncio.to_thread(
         create_token,
         {"id": id},
-        settings.ACCESS_TOKEN_EXPIRE_HOURS * 24,
+        settings.REFRESH_TOKEN_EXPIRE_HOURS,
     )
     response.set_cookie(key="refresh_token", value=refresh_token, httponly=True)
 
