@@ -23,4 +23,4 @@ required:
   - id
   - name
   - state
-title: PoliceStation_Pydantic
+title: PoliceStationSearched_Pydantic
