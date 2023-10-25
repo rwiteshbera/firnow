@@ -30,6 +30,6 @@ get:
         application/json:
           schema:
             items:
-              $ref: ../components/schemas/PoliceStationSearched_Pydantic.yaml
+              $ref: ../components/schemas/PoliceStationSearched_pydantic.yaml
             type: array
             title: Response Get Police Station Police Stations Get

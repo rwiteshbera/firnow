@@ -21,7 +21,7 @@ get:
       content:
         application/json:
           schema:
-            $ref: ../components/schemas/PoliceStationSearched_Pydantic.yaml
+            $ref: ../components/schemas/PoliceStationSearched_pydantic.yaml
     '404':
       content:
         application/json:
