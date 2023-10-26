@@ -11,7 +11,7 @@ rules:
 theme:
   openapi:
     hideLogo: true
-    layout: stacked
+    layout: three-panel
     defaultSampleLanguage: 'JavaScript'
     hideDownloadButton: true
     htmlTemplate: ./templates/index.html
