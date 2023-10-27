@@ -165,3 +165,6 @@ cert.json
 # logs folder
 logs/
 log/
+
+# pm2 config file
+ecosystem.config.js
