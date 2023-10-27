@@ -1,4 +1,5 @@
 import asyncio
+import logging
 from typing import Annotated, Optional
 
 import uvicorn
@@ -8,7 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from tortoise.exceptions import DoesNotExist
 from typing_extensions import TypedDict
 
-from config import Mode, settings
+from config import Mode, get_log_config, settings
 from databases.web3 import w3
 from dependencies.upload import get_file
 from models.errors import RequestError
@@ -17,19 +18,12 @@ from models.tables import PoliceStation
 from models.upload_file import TemporaryUploadFile
 from session import init
 
-app = FastAPI(lifespan=init)
+general_service = FastAPI(lifespan=init)
 
-if settings.MODE == Mode.DEV:
-    print("Running in development mode")
-    from services.auth import auth_service
-    from services.id import id_service
-    from services.location import location_service
+logger = logging.getLogger("uvicorn.error")
+logger.log(logging.INFO, "Starting general service")
 
-    app.mount("/auth", auth_service)
-    app.mount("/id", id_service)
-    app.mount("/location", location_service)
-
-app.add_middleware(
+general_service.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://127.0.0.1:8080",
@@ -41,7 +35,7 @@ app.add_middleware(
 )
 
 
-@app.get(
+@general_service.get(
     "/police-stations",
     summary="Get all registered police stations",
     response_model=list[PoliceStationSearched_Pydantic],
@@ -61,7 +55,7 @@ async def get_police_station(
     return await PoliceStationSearched_Pydantic.from_queryset(police_stations)
 
 
-@app.get(
+@general_service.get(
     "/police-stations/{id}",
     summary="Get a police station by id",
     response_model=PoliceStationSearched_Pydantic,
@@ -86,7 +80,7 @@ async def get_police_station_by_id(id: int):
         )
 
 
-@app.post(
+@general_service.post(
     "/upload",
     responses={
         status.HTTP_200_OK: {
@@ -135,9 +129,10 @@ async def upload_file(temp_file: Annotated[TemporaryUploadFile, Depends(get_file
 
 if __name__ == "__main__":
     uvicorn.run(
-        "main:app",
+        "services.general:general_service",
         port=8001,
         reload=True if settings.MODE == Mode.DEV else False,
-        log_level="debug" if settings.MODE == Mode.DEV else "error",
+        log_config=get_log_config("general_service"),
         workers=settings.UVICORN_WORKERS,
+        access_log=settings.ACCESS_LOG,
     )

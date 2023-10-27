@@ -1,15 +1,20 @@
+import logging
 from typing import Optional, cast
 
 from fastapi import FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 
-from config import Mode, settings
+from config import Mode, get_log_config, settings
 from databases.firestore import db
 from models.errors import RequestError
 from models.location import DistrictList, State
 from session import init
 
 location_service = FastAPI(lifespan=init)
+
+logger = logging.getLogger("uvicorn.error")
+logger.log(logging.INFO, "Starting location service")
+
 location_service.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -83,6 +88,7 @@ if __name__ == "__main__":
         "services.location:location_service",
         port=8003,
         reload=True if settings.MODE == Mode.DEV else False,
-        log_level="debug" if settings.MODE == Mode.DEV else "error",
+        log_config=get_log_config("location_service"),
         workers=settings.UVICORN_WORKERS,
+        access_log=settings.ACCESS_LOG,
     )

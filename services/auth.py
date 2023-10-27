@@ -1,17 +1,21 @@
+import logging
 from typing import Annotated
 
-from fastapi import Body, Depends, FastAPI, Response, status
+import uvicorn
+from fastapi import Depends, FastAPI, Response, status
 from fastapi.middleware.cors import CORSMiddleware
 
+from config import Mode, get_log_config, settings
 from dependencies.auth import get_id_from_token
 from models.auth import AccessToken
 from models.errors import RequestErrorWithRedirect
 from routes import police_station
 from session import init
 from utils.token import get_access_token_obj
-from config import Mode, settings
 
 auth_service = FastAPI(lifespan=init)
+logger = logging.getLogger("uvicorn.error")
+logger.log(logging.INFO, "Starting authentication service")
 
 auth_service.add_middleware(
     CORSMiddleware,
@@ -55,12 +59,11 @@ async def refresh_token(
 
 
 if __name__ == "__main__":
-    import uvicorn
-
     uvicorn.run(
         "services.auth:auth_service",
         port=8000,
         reload=True if settings.MODE == Mode.DEV else False,
-        log_level="debug" if settings.MODE == Mode.DEV else "error",
+        log_config=get_log_config("auth_service"),
         workers=settings.UVICORN_WORKERS,
+        access_log=settings.ACCESS_LOG,
     )
