@@ -9,6 +9,7 @@ from models.errors import RequestErrorWithRedirect
 from routes import police_station
 from session import init
 from utils.token import get_access_token_obj
+from config import Mode, settings
 
 auth_service = FastAPI(lifespan=init)
 
@@ -56,4 +57,10 @@ async def refresh_token(
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run("services.auth:auth_service", port=8001)
+    uvicorn.run(
+        "services.auth:auth_service",
+        port=8000,
+        reload=True if settings.MODE == Mode.DEV else False,
+        log_level="debug" if settings.MODE == Mode.DEV else "error",
+        workers=settings.UVICORN_WORKERS,
+    )

@@ -3,6 +3,7 @@ from typing import Optional, cast
 from fastapi import FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 
+from config import Mode, settings
 from databases.firestore import db
 from models.errors import RequestError
 from models.location import DistrictList, State
@@ -78,4 +79,10 @@ async def get_districts(state_code: str) -> DistrictList:
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run("services.location:location_service", port=8003)
+    uvicorn.run(
+        "services.location:location_service",
+        port=8003,
+        reload=True if settings.MODE == Mode.DEV else False,
+        log_level="debug" if settings.MODE == Mode.DEV else "error",
+        workers=settings.UVICORN_WORKERS,
+    )

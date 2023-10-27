@@ -1,10 +1,9 @@
 import time
-from csv import list_dialects
 from datetime import datetime
 
 from fastapi import FastAPI, HTTPException, status
 
-from config import settings
+from config import Mode, settings
 from models.auth import Snowflake
 from models.errors import RequestError
 from session import init
@@ -48,4 +47,10 @@ def get_id() -> Snowflake:
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run("services.id:id_service", port=8002)
+    uvicorn.run(
+        "services.id:id_service",
+        port=8002,
+        reload=True if settings.MODE == Mode.DEV else False,
+        log_level="debug" if settings.MODE == Mode.DEV else "error",
+        workers=1,
+    )
