@@ -161,3 +161,7 @@ cython_debug/
 
 #firestore certificate file
 cert.json
+
+# logs folder
+logs/
+log/
