@@ -41,10 +41,9 @@ module.exports = {
     //   restartDelay: 2000,
     // },
     {
-      interpreter: '/bin/bash',
-      interpreter_args: 'redocly preview-docs',
+      args: 'preview-docs',
       name: 'API Docs',
-      script: 'redocly.yaml',
+      script: 'redocly',
       watch: false,
       max_memory_restart: '128M',
       kill_timeout: 5000,
