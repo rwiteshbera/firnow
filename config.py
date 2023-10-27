@@ -13,7 +13,10 @@ class Mode(Enum):
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        case_sensitive=True, env_file=".env", env_file_encoding="utf-8"
+        case_sensitive=True,
+        env_file=".env",
+        env_file_encoding="utf-8",
+        extra="ignore",
     )
 
     ACCESS_TOKEN_EXPIRE_HOURS: int = 24
@@ -21,7 +24,7 @@ class Settings(BaseSettings):
     APP_CREATION_DATE: datetime = datetime(2021, 1, 1)
     API_HOST: HttpUrl = HttpUrl("http://127.0.0.1:8000")
     FIRESTORE_CERT: FilePath = Path("cert.json")
-    INTERNAL_ID_SERVER: HttpUrl = HttpUrl(f"http://127.0.0.1:8002/id")
+    INTERNAL_ID_SERVER: HttpUrl = HttpUrl(f"http://127.0.0.1:8002/")
     JWT_ALGORITHM: str = "HS256"
     JWT_SECRET_KEY: str = (
         "37401a016623f5f320bda74c83063d32ebc4bf5417bd5dbf99aa4f0afbf4cb02"
@@ -40,6 +43,10 @@ class Settings(BaseSettings):
     TEST_EMAIL: EmailStr = "test@example.com"
     WEB3_STORAGE_TOKEN: str = ""
 
+    @property
+    def UVICORN_WORKERS(self):
+        return 1 if self.MODE == Mode.DEV else 2
+
     @field_validator("APP_CREATION_DATE", mode="before")
     @classmethod
     def parse_date(cls, value: str | datetime) -> datetime:
@@ -53,7 +60,10 @@ class Settings(BaseSettings):
             raise ValueError("Invalid date format. Please use DD-MM-YYYY format.")
 
     @field_validator(
-        "SMTP_USERNAME", "SMTP_PASSWORD", "WEB3_STORAGE_TOKEN", mode="before"
+        "SMTP_USERNAME",
+        "SMTP_PASSWORD",
+        "WEB3_STORAGE_TOKEN",
+        mode="before",
     )
     @classmethod
     def parse_web3_storage_token(cls, value: str) -> str:
