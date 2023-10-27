@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      interpreter: '.venv/Scripts/python.exe',
+      interpreter: '.venv/bin/python',
       interpreter_args: '-m services.auth',
       name: 'Authentication Service',
       script: 'python',
@@ -11,7 +11,7 @@ module.exports = {
       restartDelay: 2000,
     },
     {
-      interpreter: '.venv/Scripts/python.exe',
+      interpreter: '.venv/bin/python',
       interpreter_args: '-m services.general',
       name: 'General Service',
       script: 'python',
@@ -21,7 +21,7 @@ module.exports = {
       restartDelay: 2000,
     },
     {
-      interpreter: '.venv/Scripts/python.exe',
+      interpreter: '.venv/bin/python',
       interpreter_args: '-m services.id',
       name: 'Identification Service',
       script: 'python',
@@ -31,7 +31,7 @@ module.exports = {
       restartDelay: 2000,
     },
     {
-      interpreter: '.venv/Scripts/python.exe',
+      interpreter: '.venv/bin/python',
       interpreter_args: '-m services.location',
       name: 'Location Service',
       script: 'python',
