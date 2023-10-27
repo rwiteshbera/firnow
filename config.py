@@ -44,7 +44,15 @@ class Settings(BaseSettings):
     WEB3_STORAGE_TOKEN: str = ""
 
     @property
-    def UVICORN_WORKERS(self):
+    def ACCESS_LOG(self) -> bool:
+        return True if self.MODE == Mode.DEV else False
+
+    @property
+    def LOG_LEVEL(self) -> str:
+        return "debug" if self.MODE == Mode.DEV else "info"
+
+    @property
+    def UVICORN_WORKERS(self) -> int:
         return 1 if self.MODE == Mode.DEV else 2
 
     @field_validator("APP_CREATION_DATE", mode="before")
@@ -73,6 +81,37 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
+
+
+def get_log_config(filename: str):
+    log_config = {
+        "version": 1.0,
+        "disable_existing_loggers": False,
+        "formatters": {
+            "default": {
+                "format": "%(asctime)s - %(levelname)s - %(message)s",
+            },
+        },
+        "handlers": {
+            "console": {
+                "class": "logging.StreamHandler",
+                "formatter": "default",
+            },
+            "file": {
+                "class": "logging.FileHandler",
+                "filename": f"logs/{filename}.log",
+                "formatter": "default",
+            },
+        },
+        "loggers": {
+            "uvicorn": {
+                "handlers": ["console", "file"],
+                "level": settings.LOG_LEVEL.upper(),
+            },
+        },
+    }
+    return log_config
+
 
 if __name__ == "__main__":
     print(settings.model_dump_json(indent=2))
