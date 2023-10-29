@@ -31,12 +31,26 @@ location_service.add_middleware(
     "/states",
     tags=["Location"],
     summary="Get all states of the country",
+    response_model=list[State],
+    responses={
+        status.HTTP_404_NOT_FOUND: {
+            "description": "No states found",
+            "model": RequestError,
+        },
+    },
 )
 async def get_states() -> list[State]:
     states: list[State] = [
         state.to_dict()
         async for state in db.collection("states").stream()  # type: ignore
     ]
+
+    if not states:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail={"message": "No states found"},
+        )
+
     return states
 
 
