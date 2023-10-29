@@ -25,7 +25,7 @@ get:
             type: array
             title: Response Get FIR Subjects Fir Subjects Get
     '404':
-      description: No Subjects found
+      description: Subjects Not Found
       content:
         application/json:
           schema:
