@@ -1,0 +1,33 @@
+get: 
+  security: []
+  tags: 
+    -  General Endpoints
+  summary: Get all available FIR subjects
+  description: >-
+    This endpoint is used to get all the available topis for FIR. This includes 
+    but not limited to:
+    
+      - Dowry
+      - Domestic Violence
+      - Narcotics
+    
+    etc.
+
+  operationId: get_fir_subjects_fir_subjects_get
+  responses: 
+    '200':
+      description: Successful Response
+      content: 
+        application/json:
+          schema: 
+            items: 
+              $ref: ../components/schemas/FIRSubject_pydantic.yaml
+            type: array
+            title: Response Get FIR Subjects Fir Subjects Get
+    '404':
+      description: No Subjects found
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/RequestError.yaml
+            title: Response Get FIR Subjects Fir Subjects Get
