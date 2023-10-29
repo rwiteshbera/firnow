@@ -41,6 +41,11 @@ general_service.add_middleware(
     "/police-stations",
     summary="Get all registered police stations",
     response_model=list[PoliceStationSearched_Pydantic],
+    responses={
+        status.HTTP_404_NOT_FOUND: {
+            "model": RequestError,
+        },
+    },
     tags=["General Endpoints"],
 )
 async def get_police_station(
@@ -59,7 +64,17 @@ async def get_police_station(
         police_stations = police_stations.filter(district=district)
 
     police_stations = police_stations.order_by("state", "district")
-    return await PoliceStationSearched_Pydantic.from_queryset(police_stations)
+    result = await PoliceStationSearched_Pydantic.from_queryset(police_stations)
+
+    if not result:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail={
+                "message": "No police stations found.",
+            },
+        )
+
+    return result
 
 
 @general_service.get(
