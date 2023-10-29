@@ -10,9 +10,11 @@ from tortoise.exceptions import DoesNotExist
 from typing_extensions import TypedDict
 
 from config import Mode, get_log_config, settings
+from databases.firestore import db
 from databases.web3 import w3
 from dependencies.upload import get_file
 from models.errors import RequestError
+from models.fir_subject import FirSubject
 from models.police_station import PoliceStationSearched_Pydantic
 from models.tables import PoliceStation
 from models.upload_file import TemporaryUploadFile
@@ -39,7 +41,7 @@ general_service.add_middleware(
     "/police-stations",
     summary="Get all registered police stations",
     response_model=list[PoliceStationSearched_Pydantic],
-    tags=["Police Station Endpoints"],
+    tags=["General Endpoints"],
 )
 async def get_police_station(
     state: Optional[str] = None, district: Optional[str] = None
@@ -69,7 +71,7 @@ async def get_police_station(
             "model": RequestError,
         },
     },
-    tags=["Police Station Endpoints"],
+    tags=["General Endpoints"],
 )
 async def get_police_station_by_id(id: int):
     """
@@ -108,7 +110,7 @@ async def get_police_station_by_id(id: int):
             "model": RequestError,
         },
     },
-    tags=["File Uploading Endpoint"],
+    tags=["General Endpoints"],
     openapi_extra={
         "requestBody": {
             "content": {
@@ -138,6 +140,36 @@ async def upload_file(temp_file: Annotated[TemporaryUploadFile, Depends(get_file
     )
     temp_file.close()
     return {"cid": fir_cid}
+
+
+@general_service.get(
+    "/fir-subjects",
+    response_model=list[FirSubject],
+    tags=["General Endpoints"],
+    responses={
+        status.HTTP_404_NOT_FOUND: {
+            "model": RequestError,
+        },
+    },
+)
+async def get_fir_subjects():
+    """
+    Get all FIR subjects
+    """
+    subjects: list[FirSubject] = [
+        subject.to_dict()
+        async for subject in db.collection("subjects").stream()  # type: ignore
+    ]
+
+    if not subjects:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail={
+                "message": "No FIR subjects found.",
+            },
+        )
+
+    return subjects
 
 
 if __name__ == "__main__":
