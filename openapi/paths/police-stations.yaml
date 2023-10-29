@@ -33,3 +33,11 @@ get:
               $ref: ../components/schemas/PoliceStationSearched_pydantic.yaml
             type: array
             title: Response Get Police Station Police Stations Get
+            
+    '404':
+      description: Police-Stations Not Found
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/RequestError.yaml
+            title: Response Get Police Station Police Stations Get
