@@ -26,7 +26,7 @@ async def get_file(request: Request) -> TemporaryUploadFile:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail={
-                "message": "Client disconnected while uploading the file",
+                "message": "Only PDF files are allowed.",
             },
         )
 
@@ -42,7 +42,7 @@ async def get_file(request: Request) -> TemporaryUploadFile:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail={
-                "message": "Only PDF files are allowed.",
+                "message": "Client disconnected while uploading the file",
             },
         )
 
