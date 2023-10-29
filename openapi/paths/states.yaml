@@ -19,3 +19,10 @@ get:
               $ref: ../components/schemas/State.yaml
             type: array
             title: Response Get States States Get
+    '404':
+      description: States Not Found
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/RequestError.yaml
+            title: Response Get States States Get
