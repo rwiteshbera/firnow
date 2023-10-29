@@ -23,7 +23,7 @@ post:
           schema:
             $ref: ../components/schemas/UploadResponse.yaml
     '400':
-      description: Bad Request
+      description: Client Disconnected
       content:
         application/json:
           schema:
