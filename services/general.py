@@ -1,5 +1,6 @@
 import asyncio
 import logging
+from contextlib import asynccontextmanager
 from typing import Annotated, Optional
 
 import uvicorn
@@ -11,6 +12,7 @@ from typing_extensions import TypedDict
 
 from config import Mode, get_log_config, settings
 from databases.firestore import db
+from databases.postgres import PostgresSession
 from databases.web3 import w3
 from dependencies.upload import get_file
 from models.errors import RequestError
@@ -18,7 +20,14 @@ from models.fir_subject import FirSubject
 from models.police_station import PoliceStationSearched_Pydantic
 from models.tables import PoliceStation
 from models.upload_file import TemporaryUploadFile
-from session import init
+
+
+@asynccontextmanager
+async def init(app: FastAPI):
+    await PostgresSession.init()
+    yield
+    await PostgresSession.close()
+
 
 general_service = FastAPI(lifespan=init)
 

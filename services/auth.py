@@ -1,4 +1,5 @@
 import logging
+from contextlib import asynccontextmanager
 from typing import Annotated
 
 import uvicorn
@@ -6,14 +7,32 @@ from fastapi import Depends, FastAPI, Response, status
 from fastapi.middleware.cors import CORSMiddleware
 
 from config import Mode, get_log_config, settings
+from databases.postgres import PostgresSession
+from databases.redis import RedisClient
 from dependencies.auth import get_id_from_token
 from models.auth import AccessToken
 from models.errors import RequestErrorWithRedirect
 from routes import police_station
-from session import init
+from session import SingletonSession
+from utils.mail import Mailer
 from utils.token import get_access_token_obj
 
+
+@asynccontextmanager
+async def init(app: FastAPI):
+    SingletonSession.get_session()
+    await RedisClient.get_client()
+    await PostgresSession.init()
+    await Mailer.get_client()
+    yield
+    await SingletonSession.close_session()
+    await PostgresSession.close()
+    await RedisClient.close_client()
+    await Mailer.close_client()
+
+
 auth_service = FastAPI(lifespan=init)
+
 logger = logging.getLogger("uvicorn.error")
 logger.log(logging.INFO, "Starting authentication service")
 
