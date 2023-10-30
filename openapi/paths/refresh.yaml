@@ -28,13 +28,13 @@ get:
         application/json:
           schema:
             $ref: ../components/schemas/RequestErrorWithRedirect.yaml
-      description: Bad Request
+      description: Missing Cookie
     '401':
       content:
         application/json:
           schema:
             $ref: ../components/schemas/RequestErrorWithRedirect.yaml
-      description: Unauthorized
+      description: Invalid Credentials
     '422':
       description: Validation Error
       content:

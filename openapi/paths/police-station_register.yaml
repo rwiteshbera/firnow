@@ -2,7 +2,7 @@ post:
   security: []
   tags:
     - Police Station Authentication Endpoints
-  summary: Register a new police-station
+  summary: Register a new police station
   description: >-
     Register a new police station. The request body should contain the following
     fields:
@@ -46,7 +46,7 @@ post:
           schema:
             $ref: ../components/schemas/PoliceStationRegistrationResponse.yaml
     '409':
-      description: Conflict Error
+      description: Duplicate Entity Error
       content:
         application/json:
           schema:

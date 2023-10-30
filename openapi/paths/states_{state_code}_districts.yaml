@@ -33,7 +33,7 @@ get:
                   - district2
                 total: 2
     '400':
-      description: Bad Request
+      description: Invalid State Code
       content:
         application/json:
           schema:

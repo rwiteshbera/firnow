@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
-  title: FIRNow API
-  version: 1.0.0
+  title: FIRNow API Docs
+  version: 1.1.2
   license: 
     name: MIT
     url: https://opensource.org/licenses/MIT
@@ -19,10 +19,10 @@ tags:
     description: >-
       All the endpoints related to authentication that are specific to police
       station:
-        - Registering the police-station
-        - Logging in to the police-station portal
-        - Verifying email of the police-station
-        - Sending OTP to the police-station email
+        - Registering the police station
+        - Logging in to the police station portal
+        - Verifying email of the police station
+        - Sending OTP to the police station email
 
   - name: General Authentication Endpoints
     description: >-

@@ -6,17 +6,15 @@ post:
     Verify the police station email. The request body should contain the
     following fields:
 
-    - **otp:** OTP sent to the police-station email
+    - **otp:** OTP sent to the police station email
 
 
     **Example:**
 
     ```
-
     {
         "otp": "123456"
     }
-
     ```
   operationId: verify_police_station_email_police_station_verify_email_post
   requestBody:
@@ -33,7 +31,7 @@ post:
           schema:
             $ref: ../components/schemas/VerifiedOtpResponse.yaml
     '400':
-      description: Invalid OTP Response
+      description: OTP Verification Failed
       content:
         application/json:
           schema:

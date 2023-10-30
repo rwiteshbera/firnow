@@ -32,13 +32,13 @@ post:
           schema:
             $ref: ../components/schemas/PoliceStationResponse.yaml
     '401':
-      description: Unauthorized Response
+      description: Invalid Credentials
       content:
         application/json:
           schema:
             $ref: ../components/schemas/RequestError.yaml
     '404':
-      description: Not Found Response
+      description: Account Retrieval Error
       content:
         application/json:
           schema:

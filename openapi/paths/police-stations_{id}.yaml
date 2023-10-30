@@ -2,7 +2,7 @@ get:
   security: []
   tags:
     - General Endpoints
-  summary: Get the police-station by ID
+  summary: Get the registered police station
   description: >-
     Get a police station by `id`. The `id` is unique integer helped
     to identify a police station. The `id` of police station can be 
@@ -27,7 +27,7 @@ get:
         application/json:
           schema:
             $ref: ../components/schemas/RequestError.yaml
-      description: Not Found
+      description: Police Station Not Found
     '422':
       description: Validation Error
       content:
