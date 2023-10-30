@@ -3,9 +3,8 @@ from typing import Optional
 
 from aiohttp import ClientSession
 from fastapi import FastAPI
-from tortoise import Tortoise
 
-from config import settings
+from databases.postgres import PostgresSession
 from databases.redis import RedisClient
 from utils.mail import Mailer
 
@@ -30,15 +29,10 @@ class SingletonSession:
 async def init(app: FastAPI):
     SingletonSession.get_session()
     await RedisClient.get_client()
-    await Tortoise.init(
-        db_url=str(settings.POSTGRES_URL),
-        modules={"models": ["models.tables"]},
-        use_tz=True,
-    )
-    await Tortoise.generate_schemas()
+    await PostgresSession.init()
     await Mailer.get_client()
     yield
     await SingletonSession.close_session()
-    await Tortoise.close_connections()
+    await PostgresSession.close()
     await RedisClient.close_client()
     await Mailer.close_client()
