@@ -8,7 +8,6 @@ from config import Mode, get_log_config, settings
 from databases.firestore import db
 from models.errors import RequestError
 from models.location import DistrictList, State
-from session import init
 
 location_service = FastAPI()
 
