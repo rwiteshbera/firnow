@@ -7,9 +7,8 @@ from fastapi import FastAPI, HTTPException, status
 from config import Mode, get_log_config, settings
 from models.auth import Snowflake
 from models.errors import RequestError
-from session import init
 
-id_service = FastAPI(lifespan=init)
+id_service = FastAPI()
 logger = logging.getLogger("uvicorn.error")
 logger.log(logging.INFO, "Starting identification service")
 
