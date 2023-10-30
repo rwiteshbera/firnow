@@ -9,9 +9,11 @@ from config import settings
 
 class PostgresSession:
     _conn: Optional[BaseDBAsyncClient] = None
+    _connections: int = 0
 
     @classmethod
     async def init(cls) -> None:
+        cls._connections += 1
         if cls._conn:
             return
         await Tortoise.init(
@@ -24,7 +26,8 @@ class PostgresSession:
 
     @classmethod
     async def close(cls) -> None:
-        if not cls._conn:
+        cls._connections -= 1
+        if not cls._conn or cls._connections > 0:
             return
         await Tortoise.close_connections()
         cls._conn = None
