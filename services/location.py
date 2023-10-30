@@ -10,7 +10,7 @@ from models.errors import RequestError
 from models.location import DistrictList, State
 from session import init
 
-location_service = FastAPI(lifespan=init)
+location_service = FastAPI()
 
 logger = logging.getLogger("uvicorn.error")
 logger.log(logging.INFO, "Starting location service")
