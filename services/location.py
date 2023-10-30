@@ -34,7 +34,7 @@ location_service.add_middleware(
     response_model=list[State],
     responses={
         status.HTTP_404_NOT_FOUND: {
-            "description": "No states found",
+            "description": "States Not Found",
             "model": RequestError,
         },
     },
@@ -48,7 +48,7 @@ async def get_states() -> list[State]:
     if not states:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail={"message": "No states found"},
+            detail={"message": "Could not find any states"},
         )
 
     return states
@@ -60,7 +60,7 @@ async def get_states() -> list[State]:
     summary="Get the state by state code",
     responses={
         status.HTTP_400_BAD_REQUEST: {
-            "description": "Bad Request",
+            "description": "Invalid State Code",
             "model": RequestError,
         },
     },
@@ -69,7 +69,9 @@ async def get_state(state_code: str) -> State:
     state = await db.collection("states").document(state_code).get()
     st: Optional[State] = cast(State, state.to_dict())
     if st is None:
-        raise HTTPException(status_code=400, detail={"message": "Invalid state code"})
+        raise HTTPException(
+            status_code=400, detail={"message": "State Code is not valid"}
+        )
     return st
 
 
@@ -82,7 +84,7 @@ async def get_state(state_code: str) -> State:
             "example": {"districts": ["district1", "district2"], "total": 2}
         },
         status.HTTP_400_BAD_REQUEST: {
-            "description": "Bad Request",
+            "description": "Invalid State Code",
             "model": RequestError,
         },
     },
@@ -91,7 +93,9 @@ async def get_districts(state_code: str) -> DistrictList:
     district = await db.collection("districts").document(state_code).get()
     dist: Optional[DistrictList] = cast(DistrictList, district.to_dict())
     if dist is None:
-        raise HTTPException(status_code=400, detail={"message": "Invalid state code"})
+        raise HTTPException(
+            status_code=400, detail={"message": "State Code is not valid"}
+        )
     return dist
 
 

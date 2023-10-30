@@ -39,9 +39,11 @@ auth_service.include_router(police_station.router)
         },
         status.HTTP_400_BAD_REQUEST: {
             "model": RequestErrorWithRedirect,
+            "description": "Missing Cookie",
         },
         status.HTTP_401_UNAUTHORIZED: {
             "model": RequestErrorWithRedirect,
+            "description": "Invalid Credentials",
         },
     },
     tags=["General Authentication Endpoints"],

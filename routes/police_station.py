@@ -73,7 +73,7 @@ async def authenticate_police(email: str, password: str) -> Optional[PoliceStati
             "model": PoliceStationRegistrationResponse,
         },
         status.HTTP_409_CONFLICT: {
-            "description": "Conflict Error",
+            "description": "Duplicate Entity Error",
             "model": RequestErrorWithRedirect,
         },
     },
@@ -105,7 +105,7 @@ async def register_police_station(
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
             detail={
-                "message": "Police Station already exists",
+                "message": "Police station already exists",
                 "redirect": str(LOGIN_URL),
             },
         )
@@ -139,11 +139,11 @@ async def register_police_station(
             "model": PoliceStationResponse,
         },
         status.HTTP_401_UNAUTHORIZED: {
-            "description": "Unauthorized Response",
+            "description": "Invalid Credentials",
             "model": RequestError,
         },
         status.HTTP_404_NOT_FOUND: {
-            "description": "Not Found Response",
+            "description": "Account Retrieval Error",
             "model": RequestErrorWithRedirect,
         },
     },
@@ -169,7 +169,7 @@ async def login_police_station(
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail={
-                    "message": "Incorrect email or password.",
+                    "message": "Incorrect email or password",
                 },
             )
         access_token_obj = await get_access_token_obj(police_station.id, response)
@@ -189,7 +189,7 @@ async def login_police_station(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail={
-                "message": "Email ID not found.",
+                "message": "Police Station with the provided email is not present",
                 "redirect": str(REGISTER_URL),
             },
         )
@@ -204,7 +204,7 @@ async def login_police_station(
             "model": VerifiedOtpResponse,
         },
         status.HTTP_400_BAD_REQUEST: {
-            "description": "Invalid OTP Response",
+            "description": "OTP Verification Failed",
             "model": RequestErrorWithAction,
         },
     },
@@ -232,7 +232,7 @@ async def verify_police_station_email(
         )
 
     detail = InvalidOtpResponse(
-        message="Invalid OTP",
+        message="OTP is not valid",
         action=InvalidOtp(sendOtp=SEND_OTP_URL),
     )
 
@@ -240,7 +240,7 @@ async def verify_police_station_email(
     otp = await redis.get(f"otp:{unverified.id}")
 
     if not otp:
-        detail.message = "OTP expired"
+        detail.message = "OTP has expired"
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=jsonable_encoder(detail, exclude_unset=True),
@@ -274,11 +274,11 @@ async def verify_police_station_email(
             "model": SentOtpResponse,
         },
         status.HTTP_401_UNAUTHORIZED: {
-            "description": "Unauthorized Response",
+            "description": "Invalid Credentials",
             "model": RequestErrorWithRedirect,
         },
         status.HTTP_404_NOT_FOUND: {
-            "description": "Not Found Response",
+            "description": "Account Retrieval Error",
             "model": RequestError,
         },
     },
@@ -288,7 +288,7 @@ async def send_otp_police_station(
     background_tasks: BackgroundTasks,
 ):
     """
-    Send OTP to the email address associated with the police-station account.
+    Send OTP to the email address associated with the police station account.
     This is a protected endpoint and requires the `accessToken` to be sent as a ***bearer token***.
     """
     if unverified.verified:
@@ -343,4 +343,4 @@ async def reset_password(
     except DoesNotExist:
         pass
 
-    return {"message": "If the email exists, a reset password link will been sent."}
+    return {"message": "If the email exists, a reset password link will been sent"}

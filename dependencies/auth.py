@@ -101,7 +101,7 @@ async def get_police_station(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail={
-                "message": "Police Station not found",
+                "message": "Police Station with the provided token does not exist",
             },
         )
 

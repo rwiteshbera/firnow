@@ -44,6 +44,7 @@ general_service.add_middleware(
     responses={
         status.HTTP_404_NOT_FOUND: {
             "model": RequestError,
+            "description": "Police stations Not Found",
         },
     },
     tags=["General Endpoints"],
@@ -52,8 +53,8 @@ async def get_police_station(
     state: Optional[str] = None, district: Optional[str] = None
 ):
     """
-    Get all police-stations registered in the system. If no query parameters are provided,
-    all police stations will be returned. If query parameters are provided, only police-stations
+    Get all police stations registered in the system. If no query parameters are provided,
+    all police stations will be returned. If query parameters are provided, only police stations
     matching the query parameters will be returned.
     """
     police_stations = PoliceStation.all().filter(verified=True)
@@ -70,7 +71,7 @@ async def get_police_station(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail={
-                "message": "No police stations found.",
+                "message": "Could not find any police stations",
             },
         )
 
@@ -84,13 +85,14 @@ async def get_police_station(
     responses={
         status.HTTP_404_NOT_FOUND: {
             "model": RequestError,
+            "description": "Police station Not Found",
         },
     },
     tags=["General Endpoints"],
 )
 async def get_police_station_by_id(id: int):
     """
-    Get a police-station by `id`. The `id` is unique integer helped to identify a police station.
+    Get a police station by `id`. The `id` is unique integer helped to identify a police station.
     The `id` of police station can be obtained from `/police-stations` endpoint.
     """
     try:
@@ -114,15 +116,19 @@ async def get_police_station_by_id(id: int):
         },
         status.HTTP_400_BAD_REQUEST: {
             "model": RequestError,
+            "description": "Client Disconnected",
         },
         status.HTTP_413_REQUEST_ENTITY_TOO_LARGE: {
             "model": RequestError,
+            "description": "Maximum file size exceeded",
         },
         status.HTTP_422_UNPROCESSABLE_ENTITY: {
             "model": RequestError,
+            "description": "Invalid File Format",
         },
         status.HTTP_500_INTERNAL_SERVER_ERROR: {
             "model": RequestError,
+            "description": "Internal Server Error",
         },
     },
     tags=["General Endpoints"],
@@ -164,6 +170,7 @@ async def upload_file(temp_file: Annotated[TemporaryUploadFile, Depends(get_file
     responses={
         status.HTTP_404_NOT_FOUND: {
             "model": RequestError,
+            "description": "Subjects Not Found",
         },
     },
 )
