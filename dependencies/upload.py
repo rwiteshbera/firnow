@@ -22,7 +22,7 @@ async def get_file(request: Request) -> TemporaryUploadFile:
 
         return file
 
-    except ClientDisconnect:
+    except InvalidFileException:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail={
@@ -38,7 +38,7 @@ async def get_file(request: Request) -> TemporaryUploadFile:
             },
         )
 
-    except InvalidFileException:
+    except ClientDisconnect:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail={
