@@ -4,12 +4,13 @@ from pathlib import Path
 
 from pydantic import (
     EmailStr,
+    Field,
     FilePath,
     HttpUrl,
     PostgresDsn,
     RedisDsn,
+    ValidationInfo,
     field_validator,
-    validator,
 )
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -50,7 +51,7 @@ class Settings(BaseSettings):
     SMTP_PASSWORD: str = ""
     TEST_EMAIL: EmailStr = "test@example.com"
     WEB3_STORAGE_TOKEN: str = ""
-    UVICORN_WORKERS: int = 1
+    UVICORN_WORKERS: int = Field(default=1, validate_default=True)
 
     @property
     def ACCESS_LOG(self) -> bool:
@@ -60,9 +61,9 @@ class Settings(BaseSettings):
     def LOG_LEVEL(self) -> str:
         return "debug" if self.MODE == Mode.DEV else "info"
 
-    @validator("UVICORN_WORKERS", always=True)
-    def validate_uvi_workers(cls, value, values) -> int:
-        if values["MODE"] == Mode.DEV:
+    @field_validator("UVICORN_WORKERS", mode="after")
+    def validate_uvi_workers(cls, value, info: ValidationInfo) -> int:
+        if info.data["MODE"] == Mode.DEV:
             return 1
         return value
 
