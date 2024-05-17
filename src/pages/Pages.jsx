@@ -4,6 +4,7 @@ import Wrapper from "../components/wrapper/Wrapper"
 import News from "../components/news/News"
 import Achievements from '../components/achievements/Achievements'
 
+
 const Pages = ({ productItems, addToCart, CartItem }) => {
   return (
     <>
