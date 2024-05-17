@@ -7,6 +7,7 @@ import Data from "./components/Data"
 import Cart from "./common/Cart/Cart"
 import Footer from "./common/footer/Footer"
 import LodgeFir from "./components/lodgeFir/LodgeFir"
+import Dashboard from "./pages/Dashboard"
 
 function App() {
   /*
@@ -75,6 +76,7 @@ function App() {
           <Route path='/' element={<Pages productItems={productItems} addToCart={addToCart} />} exact />
           <Route path='/cart' element={<Cart CartItem={CartItem} addToCart={addToCart} decreaseQty={decreaseQty} />} exact/>
           <Route path='/lodgeFir' element={<LodgeFir/>}></Route>
+          <Route path='/dashboard' element={<Dashboard/>}></Route>
         </Routes>
         <Footer />
       </Router>
