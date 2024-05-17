@@ -72,3 +72,11 @@
     border-radius: 5px;
 }
 
+.case-status {
+    font-weight: bold;
+    text-transform: uppercase;
+    padding-left: 15px;
+    color: #4a097e; 
+    font-size: 18px;
+}
+
