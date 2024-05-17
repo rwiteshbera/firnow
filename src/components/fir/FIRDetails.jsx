@@ -133,6 +133,7 @@ const FIRDetails = ({ firId }) => {
             <p className="fir-detail-item-container"><strong>Location:</strong> {firDetail.location}</p>
             <p className="fir-detail-item-container"><strong>Complainant:</strong> {firDetail.complainant}</p>
             <p className="fir-detail-item-container"><strong>Description:</strong> {firDetail.description}</p>
+            <p className="fir-detail-item-container"><strong>Case Status:</strong> <span className="case-status">{firDetail.status.toUpperCase()}</span></p>
             <div>
                 <h4>Attached Documents</h4>
                 {firDetail.documents.map((document, index) => (
