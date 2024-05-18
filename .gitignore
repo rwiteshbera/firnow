@@ -168,3 +168,6 @@ log/
 
 # pm2 config file
 ecosystem.config.js
+
+# docker-compose env file
+env.list
