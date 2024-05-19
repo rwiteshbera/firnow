@@ -34,6 +34,9 @@ const Navbar = () => {
               <li>
                 <Link to='/lodgeFir'>Lodge Fir</Link>
               </li>
+              <li>
+                 <Link to='/login'>Log in</Link>
+              </li>
             </ul>
 
             <button className='toggle' onClick={() => setMobileMenu(!MobileMenu)}>
