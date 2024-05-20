@@ -163,7 +163,7 @@ cython_debug/
 cert.json
 
 # logs folder
-logs/
+logs/*
 log/
 
 # pm2 config file
