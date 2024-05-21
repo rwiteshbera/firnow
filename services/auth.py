@@ -41,6 +41,7 @@ auth_service.add_middleware(
     allow_origins=[
         "http://127.0.0.1:8080",
         "https://api.firnow.duckdns.org",
+        "http://api.firnow.duckdns.org",
     ],
     allow_credentials=True,
     allow_methods=["*"],
