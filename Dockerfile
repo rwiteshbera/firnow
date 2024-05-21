@@ -29,4 +29,8 @@ COPY ./patched/* node_modules/@redocly/cli/lib/commands/preview-docs/preview-ser
 
 # RUN nohup redocly preview-docs --port 8000 &
 # CMD ["/home/nginx/nvm/versions/node/*/bin/node", "node_modules/.bin/redocly", "preview-docs", "--port", "8000", "&", "&&", "nginx", "-g", "daemon off;"]
+
+# export PATH="$PATH:/home/nginx/nvm/versions/node/*/bin"
+# . ~/.bashrc
+# ../node_modules/.bin/redocly preview-docs --port 9000
 CMD ["nginx", "-g", "daemon off;"]
