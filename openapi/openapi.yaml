@@ -8,7 +8,7 @@ info:
     
 
 servers:
-  - url: https://api.firnow.duckdns.org
+  - url: http://api.firnow.duckdns.org
     description: Production
 
   - url: http://127.0.0.1:8001
@@ -51,7 +51,7 @@ paths:
   /police-station/register:
     $ref: paths/police-station_register.yaml
     servers: &auth_endpoint
-      - url: https://api.firnow.duckdns.org/auth
+      - url: http://api.firnow.duckdns.org/auth
         description: Production
 
       - url: http://127.0.0.1:8000
@@ -76,7 +76,7 @@ paths:
   /states:
     $ref: paths/states.yaml
     servers: &location_endpoint
-      - url: https://api.firnow.duckdns.org/location
+      - url: http://api.firnow.duckdns.org/location
         description: Production
 
       - url: http://127.0.0.1:8003
