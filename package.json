@@ -17,6 +17,7 @@
     "react-custom-scrollbars": "^4.2.1",
     "react-dom": "^18.2.0",
     "react-icons": "^5.2.1",
+    "react-media-recorder": "^1.6.6",
     "react-router-dom": "^6.17.0",
     "react-scripts": "5.0.1",
     "react-slick": "^0.29.0",

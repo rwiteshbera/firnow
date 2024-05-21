@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { IconButton, TextField } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
 import { Typography } from "@mui/material";
@@ -7,9 +7,25 @@ import { Button } from "@mui/material";
 import { Stack } from "@mui/material";
 import { Box } from "@mui/material";
 import { Container } from "@mui/material";
+
 import axios from "axios";
+import { useReactMediaRecorder } from "react-media-recorder";
 
 import "./lodgeStyle.css";
+
+// const VideoPreview = ({ stream }) => {
+//   const videoRef = useRef<HTMLVideoElement>(null);
+
+//   useEffect(() => {
+//     if (videoRef.current && stream) {
+//       videoRef.current.srcObject = stream;
+//     }
+//   }, [stream]);
+//   if (!stream) {
+//     return null;
+//   }
+//   return <video ref={videoRef} width={500} height={500} autoPlay controls loop/>;
+// };
 
 const LodgeFir = () => {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -30,8 +46,24 @@ const LodgeFir = () => {
         console.log(error);
       });
   };
+
+  const { status, startRecording, stopRecording, mediaBlobUrl } =
+    useReactMediaRecorder({ video: true });
+
   return (
     <>
+    <div className="cam">
+      <button className="start" onClick={startRecording}>Start Recording</button>
+      <button className="stop" onClick={stopRecording}>Stop Recording</button>
+      <video src={mediaBlobUrl} controls autoPlay loop />
+
+    </div>
+      {/* <ReactMediaRecorder
+      video
+      render={({ previewStream }) => {
+        return <VideoPreview stream={previewStream} />;
+      }}
+    /> */}
       <h2 className="form_title">Lodge Fir</h2>
       <div className="form_lodge">
         <TextField
@@ -59,6 +91,16 @@ const LodgeFir = () => {
           }}
         ></TextField>
         <br />
+        <br />
+        <Autocomplete
+          disablePortal
+          id="combo-box-demo"
+          options={state}
+          className="selection_box"
+          renderInput={(params) => (
+            <TextField {...params} label="Select your State" />
+          )}
+        />
         <br />
         <Autocomplete
           disablePortal
@@ -187,6 +229,37 @@ const thana = [
   { label: "Hooghly - Uttarpara" },
   { label: "Kolkata - ParkStreet" },
   { label: "Other" },
+];
+
+const state = [
+  { label: "Andhra Pradesh" },
+  { label: "Arunachal Pradesh" },
+  { label: "Assam" },
+  { label: "Bihar" },
+  { label: "Chhattisgarh" },
+  { label: "Goa" },
+  { label: "Gujarat" },
+  { label: "Haryana" },
+  { label: "Himachal Pradesh" },
+  { label: "Jharkhand" },
+  { label: "Karnataka" },
+  { label: "Kerala" },
+  { label: "Madhya Pradesh" },
+  { label: "Maharashtra" },
+  { label: "Manipur" },
+  { label: "Meghalaya" },
+  { label: "Mizoram" },
+  { label: "Nagaland" },
+  { label: "Odisha" },
+  { label: "Punjab" },
+  { label: "Rajasthan" },
+  { label: "Sikkim" },
+  { label: "Tamil Nadu" },
+  { label: "Telangana" },
+  { label: "Tripura" },
+  { label: "Uttar Pradesh" },
+  { label: "Uttarakhand" },
+  { label: "West Bengal" }
 ];
 
 export default LodgeFir;
