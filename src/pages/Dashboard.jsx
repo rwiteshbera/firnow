@@ -78,7 +78,7 @@ const Dashboard = () => {
 
     return (
         <div className="dash">
-            <h2 className="form_title">Police Dashboard</h2>
+            <h2 className="form_title1">Police Dashboard</h2>
             <div className="scroll-container padded-filter" >
                 <select className="select-box" value={filterCriteria} onChange={handleFilterChange}>
                     <option value="">All</option>
@@ -88,7 +88,7 @@ const Dashboard = () => {
                 </select>
             </div>
             <div className="scroll-container">
-                <Scrollbars style={{ margin:'auto' ,width: '50%', minHeight: '600px' }}>
+                <Scrollbars style={{ margin:'auto' ,width: '100%', minHeight: '600px' }}>
                     <div className="form_lodge">
                         <PieChart smallScreen={smallScreen} />
                     </div>
