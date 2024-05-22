@@ -48,9 +48,6 @@ router = APIRouter(
     prefix=f"/{prefix}", tags=["Police Station Authentication Endpoints"]
 )
 
-ACCESS_TOKEN_EXPIRE_HOURS: int = settings.ACCESS_TOKEN_EXPIRE_HOURS
-REFRESH_TOKEN_EXPIRE_HOURS: int = settings.REFRESH_TOKEN_EXPIRE_HOURS
-
 
 async def authenticate_police(email: str, password: str) -> Optional[PoliceStation]:
     police_station = await PoliceStation.get_or_none(email=email)
