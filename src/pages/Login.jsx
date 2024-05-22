@@ -29,21 +29,20 @@ export default function Login(){
 
                    <div className="input-container">
                       <h5 className="input-header">Mail id</h5>
-                      <input className="input" type="number" placeholder="Enter the mail id here"></input>
+                      <input className="input" type="email" placeholder="Enter the mail id here"></input>
                    </div>
 
 
                    <div className="input-container">
                       <h5 className="input-header">Password</h5>
-                      <input className="input" type="text"  value={inputValue}
-                        placeholder="Enter the password here"></input>
+                      <input className="input" type="password" placeholder="Enter the password here"></input>
                    </div>
 
 
 
                    <div className="input-container">
                       <h5 className="input-header">District</h5>
-                      <input className="input" type="email" placeholder="Enter the district here"></input>
+                      <input className="input" type="" placeholder="Enter the district here"></input>
                    </div>
                     
 

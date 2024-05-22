@@ -9,6 +9,7 @@ import Footer from "./common/footer/Footer";
 import LodgeFir from "./components/lodgeFir/LodgeFir";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login.jsx";
+import SignUp from "./pages/SignUp.jsx";
 
 function App() {
   const { productItems } = Data;
@@ -42,6 +43,7 @@ function App() {
           <Route path='/cart' element={<Cart CartItem={CartItem} addToCart={addToCart} decreaseQty={decreaseQty} />} exact />
           <Route path='/lodgeFir' element={<LodgeFir />} />
           <Route path='/dashboard' element={<Dashboard />} />
+          <Route path='/signUp' element={<SignUp />} />
           <Route path='/login' element={<Login></Login>} />
         </Routes>
         <Footer />

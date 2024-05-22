@@ -88,7 +88,7 @@ const Dashboard = () => {
                 </select>
             </div>
             <div className="scroll-container">
-                <Scrollbars style={{ margin:'auto' ,width: '100%', minHeight: '600px' }}>
+                <Scrollbars style={{ margin:'auto' ,width: '50%', minHeight: '600px' }}>
                     <div className="form_lodge">
                         <PieChart smallScreen={smallScreen} />
                     </div>
