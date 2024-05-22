@@ -46,7 +46,7 @@ class Settings(BaseSettings):
     REDIS_URL: RedisDsn = RedisDsn("redis://username:password@localhost:6379")
     REFRESH_TOKEN_EXPIRE_HOURS: int = 72
     SMTP_HOST: str = "smtp.gmail.com"
-    SMTP_PORT: int = 456
+    SMTP_PORT: int = 465
     SMTP_USERNAME: str = ""
     SMTP_PASSWORD: str = ""
     TEST_EMAIL: EmailStr = "test@example.com"
