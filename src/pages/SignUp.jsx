@@ -50,6 +50,10 @@ export default function SignUp() {
             </div>
 
          </div>
+         <br />
+      <br />
+      <br />
+      <br />
       </>
    );
 }
