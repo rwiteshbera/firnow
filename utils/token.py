@@ -1,5 +1,5 @@
 import asyncio
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from fastapi import Response
 from jose import jwt
@@ -32,7 +32,14 @@ async def get_access_token_obj(id: int, response: Response) -> AccessToken:
         {"id": id},
         settings.REFRESH_TOKEN_EXPIRE_HOURS,
     )
-    response.set_cookie(key="refresh_token", value=refresh_token, httponly=True)
+    response.set_cookie(
+        key="refresh_token",
+        value=refresh_token,
+        httponly=True,
+        secure=True,
+        domain=str(settings.APP_HOST),
+        max_age=settings.REFRESH_TOKEN_EXPIRE_HOURS * 3600,
+    )
 
     access_token_obj = AccessToken(
         access_token=access_token,
@@ -55,7 +62,7 @@ def get_expire_time(hours: float) -> datetime:
     ------
         Returns time as datetime object.
     """
-    return datetime.utcnow() + timedelta(hours=hours)
+    return datetime.now(timezone.utc) + timedelta(hours=hours)
 
 
 def create_token(data: dict, expire_delta: int) -> str:
