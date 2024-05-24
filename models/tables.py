@@ -10,6 +10,7 @@ class PoliceStation(Model):
     district = fields.CharField(max_length=256)
     name = fields.CharField(max_length=256)
     verified = fields.BooleanField(default=False)
+    wallet = fields.CharField(max_length=256)
     updated_at = fields.DatetimeField(auto_now=True, alias="updatedAt")
 
     class Meta:

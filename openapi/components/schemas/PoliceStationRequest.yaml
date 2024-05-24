@@ -18,6 +18,10 @@ properties:
   password:
     type: string
     description: Password of the police station account
+  wallet:
+    type: string
+    maxLength: 256
+    description: Wallet address of the police station account
 additionalProperties: false
 type: object
 required:
@@ -26,4 +30,5 @@ required:
   - name
   - state
   - password
+  - wallet
 title: PoliceStationRequest

@@ -27,6 +27,10 @@ properties:
   verified:
     type: boolean
     description: Whether the police station is verified or not
+  wallet:
+    type: string
+    maxLength: 256
+    description: Wallet address of the police station
 additionalProperties: false
 type: object
 required:
@@ -37,4 +41,5 @@ required:
   - state
   - updatedAt
   - verified
+  - wallet
 title: PoliceStation_Pydantic

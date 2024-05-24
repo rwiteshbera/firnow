@@ -85,6 +85,7 @@ async def register_police_station(
     - **password:** Password to be set for the police station
     - **state:** Name of the state where the police station is located
     - **district:** Name of the district where the police station is located
+    - **wallet:** Wallet address of the police station
 
     **Example:**
     ```
@@ -93,7 +94,8 @@ async def register_police_station(
         "email": "example.thana@gov.in",
         "password": "1234567Aa@",
         "state": "West Bengal",
-        "district": "Hooghly"
+        "district": "Hooghly",
+        "wallet": "0x1234567890abcdef"
     }
     ```
     """

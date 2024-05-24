@@ -16,6 +16,10 @@ properties:
     type: string
     maxLength: 256
     description: State where the police station is located
+  wallet:
+    type: string
+    maxLength: 256
+    description: Wallet address of the police station
 additionalProperties: false
 type: object
 required:
@@ -23,4 +27,5 @@ required:
   - id
   - name
   - state
+  - wallet
 title: PoliceStationSearched_Pydantic

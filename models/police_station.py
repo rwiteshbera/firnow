@@ -12,7 +12,7 @@ class PoliceStationRequest(
     pydantic_model_creator(
         PoliceStation,
         name="PoliceStationRequest",
-        include=("name", "email", "state", "district"),
+        include=("name", "email", "state", "district", "wallet"),
         sort_alphabetically=True,
     )
 ):
