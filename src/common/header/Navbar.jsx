@@ -30,7 +30,7 @@ const Navbar = () => {
                 <Link to='/news'>News</Link>
               </li> */}
               <li>
-                <Link to='/dashboard'>Dashboard</Link>
+                <Link to='/police-station/dashboard'>Dashboard</Link>
               </li>
               {/* <li>
                 <Link to='/whyus'>Why Us</Link>
@@ -39,7 +39,7 @@ const Navbar = () => {
                 <Link to='/lodgeFir'>Lodge Fir</Link>
               </li>
               <li>
-                 <Link to='/register'>
+                 <Link to='/police-station/register'>
                  <button className="Nav_Reg">
                      Register
                   </button>

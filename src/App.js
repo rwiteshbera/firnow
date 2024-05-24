@@ -40,10 +40,9 @@ function App() {
         <Header CartItem={CartItem} />
         <Routes>
           <Route path='/' element={<Pages productItems={productItems} addToCart={addToCart} />} exact />
-          <Route path='/cart' element={<Cart CartItem={CartItem} addToCart={addToCart} decreaseQty={decreaseQty} />} exact />
           <Route path='/lodgeFir' element={<LodgeFir />} />
-          <Route path='/dashboard' element={<Dashboard />} />
-          <Route path='/register' element={<Register />} />
+          <Route path='/police-station/dashboard' element={<Dashboard />} />
+          <Route path='/police-station/register' element={<Register />} />
           <Route path='/login' element={<Login></Login>} />
         </Routes>
         <Footer />
