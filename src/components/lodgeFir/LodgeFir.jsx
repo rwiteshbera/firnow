@@ -170,7 +170,7 @@ const LodgeFir = () => {
         }}
       /> */}
       <h2 className="form_title">Lodge FIR</h2>
-      <div className="form_lodge">
+      <div className="form_lodge_fir">
         <TextField variant="outlined" placeholder="Write your name" className="form_text" />
         <br /><br />
         <Autocomplete disablePortal id="subject-select" options={subjects} className="selection_box" getOptionLabel={(option) => option.label} value={selectedSubject} onChange={(e, newValue) => setSelectedSubject(newValue)} renderInput={(params) => (<TextField {...params} label="Select type of crime" />)} />

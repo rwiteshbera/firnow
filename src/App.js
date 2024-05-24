@@ -8,8 +8,8 @@ import Cart from "./common/Cart/Cart";
 import Footer from "./common/footer/Footer";
 import LodgeFir from "./components/lodgeFir/LodgeFir";
 import Dashboard from "./pages/Dashboard";
-import Login from "./pages/Login.jsx";
-import Register from "./pages/Register.jsx";
+import Login from "./pages/police-station/Login.jsx";
+import Register from "./pages/police-station/Register.jsx";
 
 function App() {
   const { productItems } = Data;

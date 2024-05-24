@@ -196,13 +196,16 @@ export default function Register() {
                      )}
                   />
                </div>
+               <br/>
                <div className="submit_div">
                   <button type="submit" className="submit_btn">
                      Register
                   </button>
                </div>
             </form>
+            
          </div>
+         <div style={{padding: '40px'}}/>
          <Dialog
             open={open}
             onClose={handleClose}

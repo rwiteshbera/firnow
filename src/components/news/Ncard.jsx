@@ -23,7 +23,7 @@ const Ncard = () => {
                 <div className='img'>
                   <img style={{borderRadius: "20px", padding: "10px"}} src={value.cover} alt='' width='50%' height="50%" />
                 </div>
-                <h2 style={{textAlign:"center"}}>{value.title}</h2>
+                <h2 style={{textAlign:"center", paddingBottom: '20px'}}>{value.title}</h2>
                 <h4>{value.name}</h4><br/>
                 <p><b>Posted on : {value.date}</b></p>
                 <span>Explore <i className="fa-solid fa-arrow-right" style={{marginLeft: "10px" }}></i></span>

@@ -8,7 +8,7 @@ const Footer = () => {
         <div className='container grid2'>
           <div className='box'>
             <h1>FirNOW</h1>
-            <p className="footer-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. </p>
+            <p className="footer-text">Blockchain based Public Grievence System</p>
             <div className='icon d_flex'>
               
             </div>

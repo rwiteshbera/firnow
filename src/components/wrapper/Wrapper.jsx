@@ -6,22 +6,22 @@ const Wrapper = () => {
     {
       cover: <i class="fa-brands fa-ethereum"></i>,
       title: "Web3 based",
-      decs: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      decs: "Web3 Integration for Transparent and Secure Citizen-Police Interactions",
     },
     {
       cover: <i class='fa-solid fa-id-card'></i>,
       title: "Safety of victim",
-      decs: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      decs: "Safety of victim ensured through robust security measures in place.",
     },
     {
       cover: <i class='fa-solid fa-shield'></i>,
       title: "Secure your info ",
-      decs: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      decs: "Secure your information with encrypted data storage and blockchain technology.",
     },
     {
       cover: <i class='fa-solid fa-headset'></i>,
       title: "24/7 Support ",
-      decs: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      decs: "Access 24/7 support for immediate assistance and resolution of grievances.",
     },
   ]
   return (

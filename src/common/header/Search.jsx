@@ -12,13 +12,12 @@ const Search = ({ CartItem }) => {
 
   return (
     <>
-      <section className='search'>
-        <div className='container c_flex'>
+       <section className='search'>
+        {/* <div className='container c_flex'>
           <div className='logo width '>
-            {/* <img src={logo} alt='' /> */}
             <h2 style={{color: "purple"}}><i class="fab fa-linode fa-pulse fa-lg"></i> FirNOW</h2>
-          </div>
-
+          </div> */}
+          {/* 
           <div className='search-box f_flex'>
             <i className='fa fa-search'></i>
             <input type='text' placeholder='Search news' />
@@ -26,18 +25,18 @@ const Search = ({ CartItem }) => {
           </div>
 
           <div className='icon f_flex width'>
-            <i className='fa fa-user icon-circle'></i>
+            <i className='fa fa-user icon-circle'></i> */}
             {/* <div className='cart'>
               <Link to='/cart'>
                 <i className='fa fa-shopping-bag icon-circle'></i>
                 <span>{CartItem.length === 0 ? "" : CartItem.length}</span>
               </Link>
             </div> */}
-          </div>
+          {/* </div>
         </div>
-        <br/>
+        <br/> */}
       <Navbar />
-
+        
       </section>
 
     </>

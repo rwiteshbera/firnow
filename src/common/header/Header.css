@@ -124,9 +124,22 @@ header ul li a:hover {
   transition: 0.5s;
 }
 
+.Nav_Reg{
+  background-color: rgb(75, 34, 96);
+  padding: 12px 20px;
+   color:white;
+   font-size: 18px;
+   border-radius: 10px;
+}
+.Nav_Reg:hover{
+  cursor: pointer;
+  background-color: rgb(131, 44, 174);
+}
+
 @media (max-width: 768px) {
   header ul {
     padding-top: 30px;
+    background-color: rgba(227, 142, 13, 0.331);
   }
   .nav-links-mobile {
     position: absolute;
@@ -138,7 +151,6 @@ header ul li a:hover {
     transition: all 0.5s ease-in-out;
     width: 60%;
     height: 100vh;
-    background-color: white;
     z-index: 888;
   }
   header ul li {
