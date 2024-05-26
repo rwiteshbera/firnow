@@ -1,15 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Autocomplete from "@mui/material/Autocomplete";
 import { TextField, Button, Typography, Container, Stack, Box, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 import { useReactMediaRecorder } from "react-media-recorder";
 
 import "./lodgeStyle.css";
+import { Web3ApiContext } from "../../web3Context/apiContext";
 
 const LOCATION_URL = 'http://127.0.0.1:8003';
 const GENERAL_URL = 'http://127.0.0.1:8001';
 
 const LodgeFir = () => {
+  const {connectedAccount, LodgeFIR} = useContext(Web3ApiContext)
+
   const [selectedFile, setSelectedFile] = useState(null);
+  const [victimName, setVictimName] = useState(null)
+  const [accused, setAccused] = useState(null)
+  const [description, setDescription] = useState(null)
   const [selectedState, setSelectedState] = useState(null);
   const [selectedDistrict, setSelectedDistrict] = useState(null);
   const [selectedThana, setSelectedThana] = useState(null);
@@ -21,19 +27,6 @@ const LodgeFir = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [validationOpen, setValidationOpen] = useState(false);
 
-  // const VideoPreview = ({ stream }) => {
-  //   const videoRef = useRef<HTMLVideoElement>(null);
-
-  //   useEffect(() => {
-  //     if (videoRef.current && stream) {
-  //       videoRef.current.srcObject = stream;
-  //     }
-  //   }, [stream]);
-  //   if (!stream) {
-  //     return null;
-  //   }
-  //   return <video ref={videoRef} width={500} height={500} autoPlay controls loop/>;
-  // };
 
   const handleFileUpload = (event) => {
     setSelectedFile(event.target.files[0]);
@@ -58,6 +51,10 @@ const LodgeFir = () => {
       console.error('Error uploading file:', error);
     }
   };
+
+  const lodgeFir = async () => {
+     await LodgeFIR();
+  }
 
   const { status, startRecording, stopRecording, mediaBlobUrl } = useReactMediaRecorder({ video: true });
 
@@ -171,13 +168,13 @@ const LodgeFir = () => {
       /> */}
       <h2 className="form_title">Lodge FIR</h2>
       <div className="form_lodge_fir">
-        <TextField variant="outlined" placeholder="Write your name" className="form_text" />
+        <TextField variant="outlined" placeholder="Write your name" className="form_text"  onChange={(e, newValue) => setVictimName(newValue)}/>
         <br /><br />
         <Autocomplete disablePortal id="subject-select" options={subjects} className="selection_box" getOptionLabel={(option) => option.label} value={selectedSubject} onChange={(e, newValue) => setSelectedSubject(newValue)} renderInput={(params) => (<TextField {...params} label="Select type of crime" />)} />
         <br /><br />
-        <TextField variant="outlined" placeholder="Write the name of accused one" className="form_text" />
+        <TextField variant="outlined" placeholder="Write the name of accused one" className="form_text" onChange={(e, newValue) => setAccused(newValue)}/>
         <br /><br />
-        <TextField variant="standard" row={3} multiline={2} className="form_desc" placeholder="  Write the description of crime" InputProps={{ disableUnderline: true }}></TextField>
+        <TextField variant="standard" row={3} multiline={2} className="form_desc" placeholder="  Write the description of crime" InputProps={{ disableUnderline: true }} onChange={(e, newValue) => setDescription(newValue)}></TextField>
         <br /><br />
         <Autocomplete disablePortal id="state-select" options={states} className="selection_box" getOptionLabel={(option) => option.label} value={selectedState} onChange={(e, newValue) => setSelectedState(newValue)} renderInput={(params) => (<TextField {...params} label="Select your State" />)} />
         <br />
@@ -200,7 +197,7 @@ const LodgeFir = () => {
         </Container>
         <br /><br />
         <div className="submit_div">
-          <button type="submit" onClick={handleUpload} className="submit_btn">Lodge FIR</button>
+          <button onClick={() => lodgeFir()} className="submit_btn">Lodge FIR</button>
         </div>
       </div>
       <br /><br /><br /><br />
