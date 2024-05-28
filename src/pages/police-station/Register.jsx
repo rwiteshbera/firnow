@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import './Login.css';
 import { TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
+import { Web3ApiContext } from '../../web3Context/apiContext';
 
 const BASE_URL = 'http://127.0.0.1:8003';
 
@@ -17,6 +18,7 @@ export default function Register() {
    const [errorMessage, setErrorMessage] = useState('');
    const [validationErrors, setValidationErrors] = useState([]);
    const [validationOpen, setValidationOpen] = useState(false);
+   const {connectWallet, connectedAccount}=useContext(Web3ApiContext);
 
    useEffect(() => {
       const fetchStates = async () => {
@@ -198,10 +200,15 @@ export default function Register() {
                </div>
                <br/>
                <div className="submit_div">
+                  <button type="submit" className="submit_btn" onClick={connectWallet}>
+                     Add Wallet
+                  </button>
+               </div>
+               {/* <div className="submit_div">
                   <button type="submit" className="submit_btn">
                      Register
                   </button>
-               </div>
+               </div> */}
             </form>
             
          </div>
