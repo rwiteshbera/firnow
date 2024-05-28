@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./Login.css";
-
+import { Link } from "react-router-dom"
 export default function Login() {
   const [inputValue, setInputValue] = useState("");
 
@@ -69,7 +69,11 @@ export default function Login() {
                Login
                </button>
             </div>
+         
             </div>
+            <Link to='/police-station/register'>
+                 <u>Register here</u>
+                 </Link>
         </div>
       </div>
       <div style={{padding: '40px'}}/>
