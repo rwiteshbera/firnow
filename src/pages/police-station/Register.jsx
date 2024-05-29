@@ -18,7 +18,8 @@ export default function Register() {
    const [errorMessage, setErrorMessage] = useState('');
    const [validationErrors, setValidationErrors] = useState([]);
    const [validationOpen, setValidationOpen] = useState(false);
-   const {connectWallet, connectedAccount}=useContext(Web3ApiContext);
+   const { connectWallet, connectedAccount } = useContext(Web3ApiContext);
+   const [walletAddress, setWalletAddress] = useState(null);
 
    useEffect(() => {
       const fetchStates = async () => {
@@ -54,6 +55,14 @@ export default function Register() {
       }
    }, [selectedState]);
 
+   const handleConnectWallet = async () => {
+      await connectWallet();
+      if (connectedAccount) {
+         console.log(connectedAccount)
+         setWalletAddress(connectedAccount);
+      }
+   };
+
    const handleSubmit = async (e) => {
       e.preventDefault();
 
@@ -87,13 +96,13 @@ export default function Register() {
          return;
       }
 
-
       const payload = {
          name: policeStation,
          email,
          password,
          state: selectedState.label,
-         district: selectedDistrict
+         district: selectedDistrict,
+         wallet: walletAddress
       };
 
       try {
@@ -112,6 +121,9 @@ export default function Register() {
          } else if (resp.ok) {
             const data = await resp.json();
             console.log('Registration response:', data);
+
+            
+            window.location.href = data.redirect;
          } else {
             const errorData = await resp.json();
             console.error('Registration error:', errorData);
@@ -198,21 +210,21 @@ export default function Register() {
                      )}
                   />
                </div>
-               <br/>
+               <br />
                <div className="submit_div">
-                  <button type="submit" className="submit_btn" onClick={connectWallet}>
-                     Add Wallet
-                  </button>
+                  {walletAddress ? (
+                     <button type="submit" className="submit_btn">
+                        Register
+                     </button>
+                  ) : (
+                     <button type="button" className="submit_btn" onClick={handleConnectWallet}>
+                        Connect Wallet
+                     </button>
+                  )}
                </div>
-               {/* <div className="submit_div">
-                  <button type="submit" className="submit_btn">
-                     Register
-                  </button>
-               </div> */}
             </form>
-            
          </div>
-         <div style={{padding: '40px'}}/>
+         <div style={{ padding: '40px' }} />
          <Dialog
             open={open}
             onClose={handleClose}
@@ -259,7 +271,3 @@ export default function Register() {
       </>
    );
 }
-
-
-
-
