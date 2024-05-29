@@ -46,7 +46,7 @@ const VerifyEmail = () => {
                 const data = await resp.json();
                 console.log("otp verified ", data);
                 setMessage(data.message);
-                window.location.hrf = `/police-station/dashboard`;
+                window.location.href = `/police-station/dashboard`;
             }
         } catch (error) {
             console.error('Error verifying email:', error);
