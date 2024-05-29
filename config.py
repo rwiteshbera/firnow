@@ -40,6 +40,10 @@ class Settings(BaseSettings):
     )
     MODE: Mode = Mode.PROD
     NODE_ID: int = 0
+    PINATA_API_KEY: str = ""
+    PINATA_API_SECRET: str = ""
+    PINATA_JWT: str = ""
+    PINATA_GATEWAY: HttpUrl
     POSTGRES_URL: PostgresDsn = PostgresDsn(
         "postgresql://postgres:postgres@localhost:5432/postgres"
     )
