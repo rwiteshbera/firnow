@@ -6,7 +6,7 @@ export default function Card(props){
        <>
         <div class="parent">
         <div class="card">
-            <div class="logo">
+            {/* <div class="logo">
                 <span class="circle circle1"></span>
                 <span class="circle circle2"></span>
                 <span class="circle circle3"></span>
@@ -15,7 +15,7 @@ export default function Card(props){
                     
                 </span>
 
-            </div>
+            </div> */}
             <div class="glass"></div>
             <div class="content">
                 <span class="title">{props.name}</span>
