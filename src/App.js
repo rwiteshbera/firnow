@@ -11,6 +11,7 @@ import Dashboard from "./pages/Dashboard";
 import Login from "./pages/police-station/Login.jsx";
 import Register from "./pages/police-station/Register.jsx";
 import Status from "./pages/Status.jsx";
+import VerifyEmail from "./pages/police-station/VerifyEmail.jsx";
 
 function App() {
   const { productItems } = Data;
@@ -36,7 +37,7 @@ function App() {
   };
 
   return (
-    <>
+    
       <Router>
         <Header CartItem={CartItem} />
         <Routes>
@@ -44,12 +45,12 @@ function App() {
           <Route path='/lodgeFir' element={<LodgeFir />} />
           <Route path='/police-station/dashboard' element={<Dashboard />} />
           <Route path='/police-station/register' element={<Register />} />
-          <Route path='/login' element={<Login></Login>} />
+          <Route path='/police-station/login' element={<Login></Login>} />
+          <Route path='/police-station/verify-email' element={<VerifyEmail></VerifyEmail>} />
           <Route path='/status' element={<Status></Status>}/>
         </Routes>
         <Footer />
       </Router>
-    </>
   );
 }
 

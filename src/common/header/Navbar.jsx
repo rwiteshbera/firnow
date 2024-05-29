@@ -56,13 +56,14 @@ const Navbar = () => {
                 <Link to="/lodgeFir">Lodge Fir</Link>
               </li>
 
-              <Link to="/login" style={{marginRight:"1rem", marginTop:"0.2rem"}}>
+              <Link to="/police-station/login" style={{marginRight:"1rem", marginTop:"0.2rem"}}>
                 <img
                   width={35}
                   onClick={() => connectWallet()}
                   style={{ cursor: "pointer" }}
                   className="icon_button"
                   src={police_logo}
+                  alt="police_logo"
                 />
               </Link>
               <Link>
@@ -72,6 +73,7 @@ const Navbar = () => {
                   style={{ cursor: "pointer" }}
                   className="icon_button"
                   src={metamask_logo}
+                  alt=""
                 />
               </Link>
             </ul>
