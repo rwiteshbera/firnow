@@ -1,12 +1,19 @@
-import asyncio
+import json
 import logging
+import random
+import string
+from calendar import c
 from contextlib import asynccontextmanager
-from typing import Annotated, Optional
+from re import A
+from typing import Annotated, AsyncGenerator, Optional
 
+import aiohttp
 import uvicorn
+from click import File
 from fastapi import Depends, FastAPI, status
 from fastapi.exceptions import HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse, StreamingResponse
 from tortoise.exceptions import DoesNotExist
 from typing_extensions import TypedDict
 
@@ -20,6 +27,7 @@ from models.fir_subject import FirSubject
 from models.police_station import PoliceStationSearched_Pydantic
 from models.tables import PoliceStation
 from models.upload_file import TemporaryUploadFile
+from session import SingletonSession
 
 
 @asynccontextmanager
@@ -39,6 +47,8 @@ general_service.add_middleware(
     allow_origins=[
         "http://127.0.0.1:8080",
         "http://127.0.0.1:3000",
+        "http://localhost:8080",
+        "http://localhost:3000",
         "https://api.firnow.duckdns.org",
         "http://api.firnow.duckdns.org",
     ],
@@ -167,11 +177,55 @@ async def upload_file(temp_file: Annotated[TemporaryUploadFile, Depends(get_file
     The FIR file must be in a PDF format and the content should be sent as a `multipart/form-data`.
     The maximum file size allowed is 5 MB.
     """
-    fir_cid: str = await asyncio.to_thread(
-        w3.post_upload, (temp_file.filename, temp_file.file)
-    )
+    session = SingletonSession.get_session()
+    data = aiohttp.FormData()
+    data.add_field("file", temp_file.file.read())
+    data.add_field("pinataMetadata", json.dumps({"name": temp_file.filename}))
+    data.add_field("pinataOptions", json.dumps({"cidVersion": 1}))
+    async with session.post(
+        f"https://api.pinata.cloud/pinning/pinFileToIPFS",
+        data=data,
+        headers={"Authorization": f"Bearer {settings.PINATA_JWT}"},
+    ) as resp:
+        result = await resp.json()
+
     temp_file.close()
-    return {"cid": fir_cid}
+    return {"cid": result["IpfsHash"]}
+
+
+async def get_fir_file(
+    cid: str, session: aiohttp.ClientSession
+) -> AsyncGenerator[bytes, None]:
+    async with session.get(f"{settings.PINATA_GATEWAY}ipfs/{cid}") as resp:
+        async for data, _ in resp.content.iter_chunks():
+            yield data
+
+
+def generate_file_name() -> str:
+    choices = string.ascii_letters + string.digits
+    return f"FIR_{''.join(random.choices(choices, k=10))}.pdf"
+
+
+@general_service.get(
+    "/view/{cid}",
+    tags=["General Endpoints"],
+    responses={
+        status.HTTP_200_OK: {
+            "description": "View FIR file",
+        },
+        status.HTTP_404_NOT_FOUND: {
+            "model": RequestError,
+            "description": "File Not Found",
+        },
+    },
+)
+async def view_file(cid: str):
+    session = SingletonSession.get_session()
+    return StreamingResponse(
+        get_fir_file(cid, session),
+        media_type="application/pdf",
+        headers={"Content-Disposition": f"inline; filename={generate_file_name()}"},
+    )
 
 
 @general_service.get(
