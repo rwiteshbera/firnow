@@ -60,7 +60,7 @@ export default function Login() {
 
         window.location.href = `/police-station/dashboard`;
       } else {
-        // Handle error response
+        
         console.error("Login failed");
       }
     } catch (error) {
