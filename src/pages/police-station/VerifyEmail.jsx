@@ -1,11 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import './Login.css';
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from "@mui/material";
 
 const VerifyEmail = () => {
     const [otp, setOtp] = useState('');
+    const [message, setMessage] = useState('');
+    const [errorOpen, setErrorOpen] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
+    const [validationOpen, setValidationOpen] = useState(false);
+    const [validationMessage, setValidationMessage] = useState('');
+
+    useEffect(() => {
+       // const accessToken = getQueryParam('accessToken');
+       const accessToken = localStorage.getItem('accessToken');
+        if (accessToken) {
+            localStorage.setItem('accessToken', accessToken);
+        }
+    }, []);
 
     const handleVerifyEmail = async () => {
-        const formData = { otp: otp };
+        const accessToken = localStorage.getItem('accessToken');
 
         try {
             const resp = await fetch(
@@ -14,17 +28,37 @@ const VerifyEmail = () => {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        Authorization: `Bearer ${localStorage.getItem('accessToken')}` // storing the access token in localStorage
+                        Authorization: `Bearer ${accessToken}`
                     },
-                    body: JSON.stringify(formData)
+                    body: JSON.stringify({ otp })
                 }
             );
 
-            const data = await resp.json();
-            console.log(data);
+            if (resp.status === 400) {
+                const errorData = await resp.json();
+                setErrorMessage(errorData.message || 'Invalid OTP');
+                setErrorOpen(true);
+            } else if (resp.status === 422) {
+                const errorData = await resp.json();
+                setValidationMessage(errorData.message || 'Validation error');
+                setValidationOpen(true);
+            } else if (resp.ok) {
+                const data = await resp.json();
+                console.log("otp verified ", data);
+                setMessage(data.message);
+                window.location.hrf = `/police-station/dashboard`;
+            }
         } catch (error) {
             console.error('Error verifying email:', error);
         }
+    };
+
+    const handleClose = () => {
+        setErrorOpen(false);
+    };
+
+    const handleValidationClose = () => {
+        setValidationOpen(false);
     };
 
     return (
@@ -46,7 +80,46 @@ const VerifyEmail = () => {
                         Verify Email
                     </button>
                 </div>
+                {message && <p>{message}</p>}
             </div>
+
+            <Dialog
+                open={errorOpen}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">{"Verification Error"}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        {errorMessage}
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose} color="primary">
+                        Close
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            <Dialog
+                open={validationOpen}
+                onClose={handleValidationClose}
+                aria-labelledby="validation-dialog-title"
+                aria-describedby="validation-dialog-description"
+            >
+                <DialogTitle id="validation-dialog-title">{"Validation Error"}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="validation-dialog-description">
+                        {validationMessage}
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleValidationClose} color="primary">
+                        Close
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </div>
     );
 };

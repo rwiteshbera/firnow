@@ -23,15 +23,16 @@ export default function Login() {
       });
 
       if (resp.ok) {
-        // If login is successful, get the access token from the response
+
         const data = await resp.json();
         const accessToken = data.accessToken;
+        console.log("login successful");
         console.log(accessToken);
-        // Store the access token in local storage or state for future use
-        // Example: localStorage.setItem('accessToken', accessToken);
+        if (typeof window !== "undefined") {
+          localStorage.setItem('accessToken', data.accessToken);
+        }
 
-        // Redirect the user to the protected page
-        window.location.href = 'src\pages\Dashboard.jsx';
+        window.location.hrf = `/police-station/dashboard`;
       } else {
         // Handle error response
         console.error('Login failed');

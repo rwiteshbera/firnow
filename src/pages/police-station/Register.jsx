@@ -3,8 +3,10 @@ import './Login.css';
 import { TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
 import { Web3ApiContext } from '../../web3Context/apiContext';
+import VerifyEmail  from "./VerifyEmail";
 
 const BASE_URL = 'http://127.0.0.1:8003';
+const AUTH_URL = 'http://127.0.0.1:8000';
 
 export default function Register() {
    const [policeStation, setPoliceStation] = useState('');
@@ -106,7 +108,7 @@ export default function Register() {
       };
 
       try {
-         const resp = await fetch('http://127.0.0.1:8000/police-station/register', {
+         const resp = await fetch(`${AUTH_URL}/police-station/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
@@ -122,8 +124,22 @@ export default function Register() {
             const data = await resp.json();
             console.log('Registration response:', data);
 
-            
-            window.location.href = data.redirect;
+            // Store accessToken in localStorage
+            if (typeof window !== "undefined") {
+               localStorage.setItem('accessToken', data.accessToken);
+            }
+
+            // const otpResp = await fetch(`${AUTH_URL}/police-station/send-otp`, {
+            //    method: 'GET',
+            //    headers: {
+            //       Authorization: `Bearer ${data.accessToken}`
+            //    }
+            // });
+
+            // const otpData = await otpResp.text();
+            // console.log('OTP response:', otpData);
+
+            window.location.href = `/police-station/verify-email`;
          } else {
             const errorData = await resp.json();
             console.error('Registration error:', errorData);
