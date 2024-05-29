@@ -98,6 +98,9 @@ paths:
   
   /upload:
     $ref: paths/upload.yaml
+  
+  /view/{cid}:
+    $ref: paths/view.yaml
     
   /fir-subjects:
     $ref: paths/fir-subjects.yaml
