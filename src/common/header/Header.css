@@ -16,13 +16,14 @@
 .search {
   padding: 20px 0;
 }
-.search .logo img {
+.search .logo_firnow img {
   width: auto;
   height: auto;
 }
 .search .width {
   width: 20%;
 }
+
 .search-box {
   width: 60%;
   border: 2px solid rgba(0, 0, 0, 0.1);
@@ -135,6 +136,7 @@ header ul li a:hover {
   cursor: pointer;
   background-color: rgb(131, 44, 174);
 }
+
 
 @media (max-width: 768px) {
   header ul {

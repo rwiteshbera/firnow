@@ -22,9 +22,9 @@ const Navbar = () => {
               Dashboard
             </h4>
           </div> */}
-          <div className="logo width ">
+          <div className="logo_firnow width">
             {/* <img src={logo} alt='' /> */}
-            <h2 style={{ color: "purple", fontSize: "30px" }}>
+            <h2 style={{ color: "purple", fontSize: "30px", margin: '30px'}}>
               <i class="fab fa-linode fa-pulse fa-lg"></i> FirNOW
             </h2>
           </div>
@@ -43,6 +43,9 @@ const Navbar = () => {
               {/* <li>
                 <Link to='/news'>News</Link>
               </li> */}
+              <li>
+                <Link to="/status">Track Status</Link>
+              </li>
               <li>
                 <Link to="/police-station/dashboard">Dashboard</Link>
               </li>
