@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import "./Login.css";
 import { Link } from "react-router-dom";
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from "@mui/material";
+
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -44,7 +46,7 @@ export default function Login() {
         setValidationOpen(true);
       } else if (resp.status === 404) {
         const errorData = await resp.json();
-        setValidationMessage(errorData.message || "Account retrival error");
+        setValidationMessage(errorData.message || "Account retrieval error");
         console.log(errorData.message);
         setValidationOpen(true);
       } else if (resp.ok) {
@@ -66,6 +68,14 @@ export default function Login() {
     }
   };
 
+  const handleClose = () => {
+    setErrorOpen(false);
+  };
+
+  const handleValidationClose = () => {
+    setValidationOpen(false);
+  };
+
   return (
     <>
       <h2 className="form_title2">Log in</h2>
@@ -78,7 +88,9 @@ export default function Login() {
                 className="input"
                 type="email"
                 placeholder="Enter the mail id here"
-              ></input>
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
             </div>
 
             <div className="input-container">
@@ -87,7 +99,9 @@ export default function Login() {
                 className="input"
                 type="password"
                 placeholder="Enter the password here"
-              ></input>
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
             </div>
             <div className="input-container">
               <div className="submit_div" style={{ width: "60%" }}>
@@ -103,6 +117,44 @@ export default function Login() {
         </div>
       </div>
       <div style={{ padding: "40px" }} />
+
+      <Dialog
+        open={errorOpen}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Login Error"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            {errorMessage}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={validationOpen}
+        onClose={handleValidationClose}
+        aria-labelledby="validation-dialog-title"
+        aria-describedby="validation-dialog-description"
+      >
+        <DialogTitle id="validation-dialog-title">{"Validation Error"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="validation-dialog-description">
+            {validationMessage}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleValidationClose} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
