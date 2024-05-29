@@ -19,7 +19,7 @@ const Ncard = () => {
         {Ndata.map((value, index) => {
           return (
             <>
-              <div className='box product' key={index}>
+              <div className='box product' key={index} style={{ border: '6px solid #69586C'}}>
                 <div className='img'>
                   <img style={{borderRadius: "20px", padding: "10px"}} src={value.cover} alt='' width='50%' height="50%" />
                 </div>

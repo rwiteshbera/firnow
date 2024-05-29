@@ -1,5 +1,6 @@
 import React from "react"
 import "./style.css"
+import "../Status/Card.css"
 
 const Wrapper = () => {
   const data = [
@@ -30,12 +31,14 @@ const Wrapper = () => {
         <div className='container grid2'>
           {data.map((val, index) => {
             return (
-              <div className='product' key={index}>
+              <div className='product' key={index} style={{borderTopRightRadius: '10px', borderBottomLeftRadius: '10px', borderTopLeftRadius: '100px', borderBottomRightRadius: '100px', border: '4px solid #69586C'}}>
                 <div className='img icon-circle'>
                   <i>{val.cover}</i>
                 </div>
+                <div>
                 <h3>{val.title}</h3>
                 <p>{val.decs}</p>
+                </div>
               </div>
             )
           })}

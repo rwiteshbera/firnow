@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
+import React, { useState, useEffect, useContext, useRef, Component } from "react";
 import Autocomplete from "@mui/material/Autocomplete";
 import {
   TextField,
@@ -23,6 +23,7 @@ import {
   FaVideoSlash,
   FaMicrophoneSlash,
 } from "react-icons/fa";
+import axios from "axios";
 
 const LOCATION_URL = "http://127.0.0.1:8003";
 const GENERAL_URL = "http://127.0.0.1:8001";
@@ -101,16 +102,28 @@ const LodgeFir = () => {
   };
 
   // NOT WORKING
+
   const handleUpload = async () => {
+    console.log("Hello");
+  
     try {
+      if (!selectedFile) {
+        throw new Error("No file selected");
+      }
+  
       const form = new FormData();
       form.append("file", selectedFile);
+      console.log(selectedFile);
+  
       const resp = await fetch(`${GENERAL_URL}/upload`, {
         method: "POST",
         body: form,
       });
+  
       if (resp.ok) {
         console.log("File uploaded successfully");
+        const jsonResponse = await resp.json();
+        console.log(jsonResponse);
       } else {
         console.error("Failed to upload file:", resp.statusText);
       }
@@ -118,6 +131,7 @@ const LodgeFir = () => {
       console.error("Error uploading file:", error);
     }
   };
+  
 
   const lodgeFir = async () => {
     await LodgeFIR();
@@ -461,7 +475,7 @@ const LodgeFir = () => {
               <Button
                 variant="contained"
                 type="submit"
-                onChange={handleUpload}
+                onClick={handleUpload}
                 sx={{
                   backgroundColor: "#0d2036",
                   color: "rgb(255, 255, 255)",
