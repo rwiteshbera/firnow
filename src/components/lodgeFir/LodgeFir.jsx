@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useContext, useRef, Component } from "react";
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  useRef,
+  Component,
+} from "react";
 import Autocomplete from "@mui/material/Autocomplete";
 import {
   TextField,
@@ -24,6 +30,8 @@ import {
   FaMicrophoneSlash,
 } from "react-icons/fa";
 import axios from "axios";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const LOCATION_URL = "http://127.0.0.1:8003";
 const GENERAL_URL = "http://127.0.0.1:8001";
@@ -105,33 +113,35 @@ const LodgeFir = () => {
 
   const handleUpload = async () => {
     console.log("Hello");
-  
+
     try {
       if (!selectedFile) {
         throw new Error("No file selected");
       }
-  
+
       const form = new FormData();
       form.append("file", selectedFile);
       console.log(selectedFile);
-  
+
       const resp = await fetch(`${GENERAL_URL}/upload`, {
         method: "POST",
         body: form,
       });
-  
+
       if (resp.ok) {
         console.log("File uploaded successfully");
+        alert("File uploaded successfully");
         const jsonResponse = await resp.json();
         console.log(jsonResponse);
       } else {
+        alert("Failed to upload file");
         console.error("Failed to upload file:", resp.statusText);
       }
     } catch (error) {
+      alert("Error uploading file. Only pdf is allowed");
       console.error("Error uploading file:", error);
     }
   };
-  
 
   const lodgeFir = async () => {
     await LodgeFIR();
@@ -265,14 +275,13 @@ const LodgeFir = () => {
         </button>
         <video src={mediaBlobUrl} controls autoPlay loop />
       </div> */}
-      <div className="cam" style={{height: '300px'}}>
+      <div className="cam" style={{ height: "300px" }}>
         <div
           style={{
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
             marginTop: "20px",
-
           }}
         >
           <video
@@ -289,10 +298,10 @@ const LodgeFir = () => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            marginTop: '10px',
+            marginTop: "10px",
           }}
         >
-          <button
+          {/* <button
             onClick={handleVideo}
             style={{
               width: "3rem",
@@ -301,7 +310,7 @@ const LodgeFir = () => {
               border: "none",
               backgroundColor: "#b8b1f9e6",
               color: "#4a097e",
-              marginRight: '40px',
+              marginRight: "40px",
             }}
             title={videoswitch ? "Turn off video" : "Turn on video"}
           >
@@ -310,7 +319,7 @@ const LodgeFir = () => {
             ) : (
               <FaVideoSlash style={{ fontSize: "1.3rem" }} />
             )}
-          </button>
+          </button> */}
           <button
             onClick={handleAudio}
             style={{
@@ -369,8 +378,13 @@ const LodgeFir = () => {
           row={3}
           multiline={2}
           className="form_desc"
-          placeholder="  Write the description of crime"
-          InputProps={{ disableUnderline: true }}
+          placeholder="Write the description of crime"
+          InputProps={{
+            style: {
+              padding: 10,
+            },
+            disableUnderline: true,
+          }}
           onChange={(e, newValue) => setDescription(newValue)}
         ></TextField>
         <br />
@@ -469,7 +483,7 @@ const LodgeFir = () => {
                 variant="p"
                 sx={{ fontSize: "14px", fontWeight: "600" }}
               >
-                Drop your files here to attach them
+                Drop your PDF files here to attach them
               </Typography>
               <input type="file" onChange={handleFileUpload} />
               <Button
