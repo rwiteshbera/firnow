@@ -41,6 +41,7 @@ const LodgeFir = () => {
 
   const [selectedFile, setSelectedFile] = useState(null);
   const [victimName, setVictimName] = useState(null);
+  const [aadharNumber, setAadharNumber] = useState(0);
   const [accused, setAccused] = useState(null);
   const [description, setDescription] = useState(null);
   const [selectedState, setSelectedState] = useState(null);
@@ -351,6 +352,7 @@ const LodgeFir = () => {
         />
         <br />
         <br />
+        
         <Autocomplete
           disablePortal
           id="subject-select"
@@ -363,6 +365,16 @@ const LodgeFir = () => {
             <TextField {...params} label="Select type of crime" />
           )}
         />
+        <br />
+        
+        <TextField
+          variant="outlined"
+          type="number"
+          placeholder="Write your Aadhar Number"
+          className="form_text"
+          onChange={(e, newValue) => setAadharNumber(newValue)}
+        />
+        <button style={{backgroundColor: 'rgb(75, 34, 96)', color: 'white', padding: '10px', fontWeight: 'bold', borderRadius: '5px',margin:'10px -140px', zIndex: '100', position: 'absolute'}}>Verify Aadhar</button>
         <br />
         <br />
         <TextField
