@@ -4,10 +4,10 @@ from config import Mode, settings
 
 prefix = "police-station"
 
-APP_HOST: HttpUrl = settings.APP_HOST
 API_HOST: HttpUrl = settings.API_HOST
 
 if settings.MODE == Mode.DEV:
+    APP_HOST: HttpUrl = settings.APP_HOST
     LOGIN_URL: HttpUrl = HttpUrl(f"{API_HOST}{prefix}/login")
     REGISTER_URL: HttpUrl = HttpUrl(f"{API_HOST}{prefix}/register")
     REFRESH_TOKEN_URL: HttpUrl = HttpUrl(f"{API_HOST}refresh")
@@ -17,6 +17,7 @@ if settings.MODE == Mode.DEV:
     RESET_PASSWORD_URL: HttpUrl = HttpUrl(f"{APP_HOST}{prefix}/reset-password")
 
 else:
+    APP_HOST: HttpUrl = settings.APP_HOST
     LOGIN_URL: HttpUrl = HttpUrl(f"{API_HOST}auth/{prefix}/login")
     REGISTER_URL: HttpUrl = HttpUrl(f"{API_HOST}auth/{prefix}/register")
     REFRESH_TOKEN_URL: HttpUrl = HttpUrl(f"{API_HOST}auth/refresh")
