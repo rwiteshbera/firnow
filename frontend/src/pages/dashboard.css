@@ -1,0 +1,50 @@
+.dash {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; 
+    min-height: 100vh;  /* without it not working :<*/
+}
+
+.form_title1 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 30px;
+    font-family: "Poppins", sans-serif;
+    color: #4a097e;
+}
+
+.scroll-container {
+    width: 100%; 
+    margin-bottom: 20px; 
+}
+
+.padded-filter {
+    padding: 5px 100px; 
+    margin-bottom: 20px; 
+    border-radius: 5px; 
+}
+
+
+
+.form_lodge {
+    background-color: #b8b1f9e6;
+    margin: auto;
+    width: 90%; 
+    padding: 4rem;
+    border-radius: 30px;
+    align-items: center;
+}
+
+
+@media (min-width: 768px) {
+    .pie-chart-legend {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 767px) {
+    .pie-chart-legend {
+        font-size: 12px;
+    }
+}
