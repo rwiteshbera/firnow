@@ -1,0 +1,39 @@
+properties:
+  accessToken:
+    type: string
+    description: >-
+      The access token to be used for authenticating requests
+  tokenType:
+    type: string
+    default: bearer
+    description: >-
+      The type of the token used.
+  refreshAfter:
+    type: string
+    format: date-time
+    description: >-
+      The time after which the access token will expire
+  refreshUrl:
+    type: string
+    maxLength: 2083
+    minLength: 1
+    format: uri
+    description: >-
+      The URL to be used to refresh the access token
+  redirect:
+    type: string
+    maxLength: 2083
+    minLength: 1
+    format: uri
+    description: >-
+      The URL to be used to redirect after successful registration
+  policeStation:
+    $ref: ./PoliceStation_Pydantic.yaml
+type: object
+required:
+  - accessToken
+  - refreshAfter
+  - refreshUrl
+  - redirect
+  - policeStation
+title: PoliceStationRegistrationResponse

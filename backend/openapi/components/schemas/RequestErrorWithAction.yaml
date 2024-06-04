@@ -1,0 +1,7 @@
+properties:
+  detail:
+    $ref: ./ErrorMessageWithAction.yaml
+type: object
+required:
+  - detail
+title: RequestErrorWithAction

@@ -1,0 +1,9 @@
+properties:
+  otp:
+    type: string
+    description: >-
+      The OTP sent to the user
+type: object
+required:
+  - otp
+title: OtpRequest

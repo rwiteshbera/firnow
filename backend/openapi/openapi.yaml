@@ -1,0 +1,130 @@
+openapi: 3.1.0
+info:
+  title: FIRNow API Docs
+  version: 1.1.2
+  license: 
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+    
+
+servers:
+  - url: http://api.firnow.duckdns.org
+    description: Production
+
+  - url: http://127.0.0.1:8001
+    description: Development
+  
+tags:
+  - name: Police Station Authentication Endpoints
+    description: >-
+      All the endpoints related to authentication that are specific to police
+      station:
+        - Registering the police station
+        - Logging in to the police station portal
+        - Verifying email of the police station
+        - Sending OTP to the police station email
+
+  - name: General Authentication Endpoints
+    description: >-
+      All the endpoints related to authentication that are general to both
+      police station and users:
+        - Refreshing access token
+
+
+  - name: Location Endpoints
+    description: >-
+      All the endpoints related to locations:
+        - Get all the states
+        - Get a particular state using `state_code`
+        - Get all the districts of a state
+
+
+  - name: General Endpoints
+    description: >-
+      All the endpoints related to general stuffs like: getting police
+      stations, uploading files etc.
+        - Get all the police stations (by state and/or district)
+        - Get a particular police station using `id`
+        - Upload FIR reports as PDF files
+
+paths:
+  /police-station/register:
+    $ref: paths/police-station_register.yaml
+    servers: &auth_endpoint
+      - url: http://api.firnow.duckdns.org/auth
+        description: Production
+
+      - url: http://127.0.0.1:8000
+        description: Development
+
+  /police-station/login:
+    $ref: paths/police-station_login.yaml
+    servers: *auth_endpoint
+
+  /police-station/verify-email:
+    $ref: paths/police-station_verify-email.yaml
+    servers: *auth_endpoint
+
+  /police-station/send-otp:
+    $ref: paths/police-station_send-otp.yaml
+    servers: *auth_endpoint
+
+  /refresh:
+    $ref: paths/refresh.yaml
+    servers: *auth_endpoint
+
+  /states:
+    $ref: paths/states.yaml
+    servers: &location_endpoint
+      - url: http://api.firnow.duckdns.org/location
+        description: Production
+
+      - url: http://127.0.0.1:8003
+        description: Development
+
+  /states/{state_code}:
+    $ref: paths/states_{state_code}.yaml
+    servers: *location_endpoint
+
+  /states/{state_code}/districts:
+    $ref: paths/states_{state_code}_districts.yaml
+    servers: *location_endpoint
+
+  /police-stations:
+    $ref: paths/police-stations.yaml
+
+  /police-stations/{id}:
+    $ref: paths/police-stations_{id}.yaml
+  
+  /upload:
+    $ref: paths/upload.yaml
+  
+  /view/{cid}:
+    $ref: paths/view.yaml
+    
+  /fir-subjects:
+    $ref: paths/fir-subjects.yaml
+
+
+components:
+  securitySchemes:
+    OAuth2PasswordBearer:
+      type: oauth2
+      flows:
+        password:
+          scopes: {}
+          tokenUrl: police-station/login
+          
+x-tagGroups:
+  - name: Authentication
+    tags:
+      - Police Station Authentication Endpoints
+      - General Authentication Endpoints
+
+  - name: Location
+    tags:
+      - Location Endpoints
+      
+  - name: General
+    tags:
+      - General Endpoints

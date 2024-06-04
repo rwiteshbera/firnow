@@ -1,0 +1,12 @@
+properties:
+  verifyOtp:
+    type: string
+    maxLength: 2083
+    minLength: 1
+    format: uri
+    description: >-
+      The URL to be used to verify the OTP
+type: object
+required:
+  - verifyOtp
+title: SentOtp

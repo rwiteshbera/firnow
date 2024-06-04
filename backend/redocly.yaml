@@ -1,0 +1,26 @@
+# See https://redocly.com/docs/cli/configuration/ for more information.
+apis:
+  sample@v1: 
+    root: ./openapi/openapi.yaml
+    rules:
+      no-ambiguous-paths: error
+extends:
+  - recommended
+rules:
+  no-unused-components: warn
+theme:
+  openapi:
+    hideLogo: true
+    layout: three-panel
+    defaultSampleLanguage: 'JavaScript'
+    hideDownloadButton: true
+    htmlTemplate: ./templates/index.html
+    theme:
+      colors:
+        primary:
+          main: "#32329f"
+    generateCodeSamples:
+      languages:  # Array of language config objects; indicates in which languages to generate code samples.
+        - lang: curl
+        - lang: Node.js
+        - lang: JavaScript

@@ -1,0 +1,51 @@
+post:
+  security: []
+  tags:
+    - Police Station Authentication Endpoints
+  summary: Login to an existing police station account
+  description: >-
+    Login to an existing police station account. The request payload should be
+    sent as a form data with the following fields according to OpenAPI standard:
+
+    - **username:** Email ID of the police station
+
+    - **password:** Password of the police station
+
+
+    The `accessToken` received in the response should be used as a ***bearer
+    token*** while making
+
+    request to the protected endpoints.
+  operationId: login_police_station_police_station_login_post
+  requestBody:
+    content:
+      application/x-www-form-urlencoded:
+        schema:
+          $ref: >-
+            ../components/schemas/Body_login_police_station_police_station_login_post.yaml
+    required: true
+  responses:
+    '200':
+      description: Successful Response
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/PoliceStationResponse.yaml
+    '401':
+      description: Invalid Credentials
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/RequestError.yaml
+    '404':
+      description: Account Retrieval Error
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/RequestErrorWithRedirect.yaml
+    '422':
+      description: Validation Error
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/HTTPValidationError.yaml

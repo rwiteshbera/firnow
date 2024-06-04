@@ -1,0 +1,46 @@
+get:
+  security: []
+  tags:
+    - Location Endpoints
+  summary: Get all districts of the state
+  description: >-
+    Returns all the districts of the state with the given state code.
+    The state code is the `ISO 3166-2:IN` code of the state. For example, 
+    the state code of Andhra Pradesh is `IN-AP`. The state code is 
+    *case sensitive*.
+
+  operationId: get_districts_states__state_code__districts_get
+  parameters:
+    - name: state_code
+      in: path
+      required: true
+      schema:
+        type: string
+      description: >-
+        `ISO 3166-2:IN` code of the state.
+  responses:
+    '200':
+      description: Successful Response
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/DistrictList.yaml
+          examples:
+            Response example:
+              value:
+                districts:
+                  - district1
+                  - district2
+                total: 2
+    '400':
+      description: Invalid State Code
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/RequestError.yaml
+    '422':
+      description: Validation Error
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/HTTPValidationError.yaml

@@ -1,0 +1,31 @@
+properties:
+  district:
+    type: string
+    maxLength: 256
+    description: District where the police station is located
+  id:
+    type: integer
+    maximum: 9223372036854776000
+    minimum: 1
+    description: Unique ID of the police station
+  name:
+    type: string
+    maxLength: 256
+    description: Name of the police station
+  state:
+    type: string
+    maxLength: 256
+    description: State where the police station is located
+  wallet:
+    type: string
+    maxLength: 256
+    description: Wallet address of the police station
+additionalProperties: false
+type: object
+required:
+  - district
+  - id
+  - name
+  - state
+  - wallet
+title: PoliceStationSearched_Pydantic

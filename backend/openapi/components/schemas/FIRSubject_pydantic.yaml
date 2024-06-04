@@ -1,0 +1,12 @@
+properties:
+  id:
+    type: integer
+    description: Unique identifier for the FIR subject
+  name:
+    type: string
+    description: Name of the FIR subject
+type: object
+required:
+  - id
+  - name
+title: FIR Subject

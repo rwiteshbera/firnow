@@ -1,0 +1,34 @@
+properties:
+  district:
+    type: string
+    maxLength: 256
+    description: District where the police station is located
+  email:
+    type: string
+    format: email
+    description: Email address of the police station
+  name:
+    type: string
+    maxLength: 256
+    description: Name of the police station
+  state:
+    type: string
+    maxLength: 256
+    description: State where the police station is located
+  password:
+    type: string
+    description: Password of the police station account
+  wallet:
+    type: string
+    maxLength: 256
+    description: Wallet address of the police station account
+additionalProperties: false
+type: object
+required:
+  - district
+  - email
+  - name
+  - state
+  - password
+  - wallet
+title: PoliceStationRequest

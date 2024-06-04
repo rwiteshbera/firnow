@@ -1,0 +1,12 @@
+properties:
+  username:
+    type: string
+    description: Registered email address of the police station
+  password:
+    type: string
+    description: Password of the police station account
+type: object
+required:
+  - username
+  - password
+title: Body_login_police_station_police_station_login_post

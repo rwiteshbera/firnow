@@ -1,0 +1,8 @@
+properties:
+  cid:
+    type: string
+    description: Unique ID of the uploaded file
+type: object
+required: 
+  - cid
+title: UploadResponse

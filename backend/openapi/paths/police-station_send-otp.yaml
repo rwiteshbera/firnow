@@ -1,0 +1,31 @@
+get:
+  tags:
+    - Police Station Authentication Endpoints
+  summary: Send OTP to the police station email
+  description: >-
+    Send OTP to the email address associated with the police station account.
+
+    This is a protected endpoint and requires the `accessToken` to be sent as a
+    *bearer token*.
+  operationId: send_otp_police_station_police_station_send_otp_get
+  responses:
+    '200':
+      description: Successful Response
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/SentOtpResponse.yaml
+    '401':
+      description: Invalid Credentials
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/RequestErrorWithRedirect.yaml
+    '404':
+      description: Account Retrieval Error
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/RequestError.yaml
+  security:
+    - OAuth2PasswordBearer: []

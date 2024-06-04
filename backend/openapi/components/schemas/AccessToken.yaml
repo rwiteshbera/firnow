@@ -1,0 +1,28 @@
+properties:
+  accessToken:
+    type: string
+    description: >-
+      The access token to be used for authentication.
+  tokenType:
+    type: string
+    default: bearer
+    description: >-
+      The type of the token issued.
+  refreshAfter:
+    type: string
+    format: date-time
+    description: >-
+      The date and time after which the access token will expire.
+  refreshUrl:
+    type: string
+    maxLength: 2083
+    minLength: 1
+    format: uri
+    description: >-
+      The URL to be used to refresh the access token.
+type: object
+required:
+  - accessToken
+  - refreshAfter
+  - refreshUrl
+title: AccessToken

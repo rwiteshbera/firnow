@@ -1,0 +1,16 @@
+properties:
+  message:
+    type: string
+    description: Message describing the error
+  redirect:
+    type: string
+    maxLength: 2083
+    minLength: 1
+    format: uri
+    description: >-
+      The URL to be used to redirect the user
+type: object
+required:
+  - message
+  - redirect
+title: ErrorMessageWithRedirect

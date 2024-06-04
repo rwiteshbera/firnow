@@ -1,0 +1,33 @@
+get: 
+  security: []
+  tags: 
+    - General Endpoints
+  summary: View the FIR file
+  description: >-
+    View the FIR file with the given CID. The FIR file will be returned as a PDF
+    file.
+
+  operationId: "view_file_view__cid__get"
+  parameters:
+    - name: cid
+      in: path
+      required: true
+      schema:
+        type: string
+      description: >-
+        The unique identifier of the FIR file.
+    
+  responses: 
+    '200':
+      description: Successful Response
+      content:
+        application/pdf:
+          schema:
+            type: string
+            format: binary
+    '404':
+      description: File Not Found
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/RequestError.yaml

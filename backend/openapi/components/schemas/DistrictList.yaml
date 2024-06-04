@@ -1,0 +1,14 @@
+properties:
+  districts:
+    items:
+      type: string
+    type: array
+    description: List of districts in the state
+  total:
+    type: integer
+    description: Total number of districts
+type: object
+required:
+  - districts
+  - total
+title: DistrictList

@@ -1,0 +1,43 @@
+get:
+  security: []
+  tags:
+    - General Endpoints
+  summary: Get all registered police stations
+  description: >-
+    Get all police stations registered in the system. If no query parameters are
+    provided, all police stations will be returned. If query parameters are
+    provided, only police stations matching the query parameters will be
+    returned.
+
+  operationId: get_police_station_police_stations_get
+  parameters: 
+    - name: state
+      in: query
+      required: false
+      schema: 
+        type: "string"
+      description: State of the police station to filter by.
+    - name: district
+      in: query
+      required: false
+      schema: 
+        type: string
+      description: District of the police station to filter by.
+  responses:
+    '200':
+      description: Successful Response
+      content:
+        application/json:
+          schema:
+            items:
+              $ref: ../components/schemas/PoliceStationSearched_pydantic.yaml
+            type: array
+            title: Response Get Police Station Police Stations Get
+            
+    '404':
+      description: Police stations Not Found
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/RequestError.yaml
+            title: Response Get Police Station Police Stations Get

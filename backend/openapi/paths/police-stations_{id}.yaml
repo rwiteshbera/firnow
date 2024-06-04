@@ -1,0 +1,36 @@
+get:
+  security: []
+  tags:
+    - General Endpoints
+  summary: Get the registered police station
+  description: >-
+    Get a police station by `id`. The `id` is unique integer helped
+    to identify a police station. The `id` of police station can be 
+    obtained from `/police-stations` endpoint.
+  operationId: get_police_station_by_id_police_stations__id__get
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: The `id` of the police station to retrieve.
+  responses:
+    '200':
+      description: Successful Response
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/PoliceStationSearched_pydantic.yaml
+    '404':
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/RequestError.yaml
+      description: Police Station Not Found
+    '422':
+      description: Validation Error
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/HTTPValidationError.yaml

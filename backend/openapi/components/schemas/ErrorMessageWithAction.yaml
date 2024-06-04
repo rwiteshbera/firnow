@@ -1,0 +1,16 @@
+properties:
+  message:
+    type: string
+    description: The message describing the error
+  action:
+    type: string
+    maxLength: 2083
+    minLength: 1
+    format: uri
+    description: >-
+      The URL to be used to take action against the error
+type: object
+required:
+  - message
+  - action
+title: ErrorMessageWithAction
