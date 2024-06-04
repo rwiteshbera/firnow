@@ -37,8 +37,18 @@ const LOCATION_URL = "http://127.0.0.1:8003";
 const GENERAL_URL = "http://127.0.0.1:8001";
 
 const LodgeFir = () => {
-  const { connectedAccount, LodgeFIR } = useContext(Web3ApiContext);
-
+  const {
+    connectedAccount,
+    LodgeFIR,
+    setName,
+    setCriminal,
+    setSubject,
+    setDetails,
+    setState,
+    setDistrict,
+    setPoliceStation,
+    setCid,
+  } = useContext(Web3ApiContext);
   const [selectedFile, setSelectedFile] = useState(null);
   const [victimName, setVictimName] = useState(null);
   const [aadharNumber, setAadharNumber] = useState(0);
@@ -110,8 +120,6 @@ const LodgeFir = () => {
     setSelectedFile(event.target.files[0]);
   };
 
-  // NOT WORKING
-
   const handleUpload = async () => {
     console.log("Hello");
 
@@ -133,6 +141,8 @@ const LodgeFir = () => {
         console.log("File uploaded successfully");
         alert("File uploaded successfully");
         const jsonResponse = await resp.json();
+        const { cid } = jsonResponse;
+        setCid(cid);
         console.log(jsonResponse);
       } else {
         alert("Failed to upload file");
@@ -209,7 +219,11 @@ const LodgeFir = () => {
           });
           const data = await resp.json();
           if (Array.isArray(data) && data.length > 0) {
-            setPoliceStations(data.map((station) => ({ label: station.name })));
+            const formattedStations = data.map((station) => ([
+              station.name,
+              station.wallet,
+            ]));
+            setPoliceStations(formattedStations);
           } else {
             console.log(
               "Could not find any police stations for the selected district. Fetching all police stations."
@@ -219,10 +233,11 @@ const LodgeFir = () => {
               { method: "GET" }
             );
             const allStationsData = await allStationsResp.json();
-            if (Array.isArray(allStationsData)) {
-              setPoliceStations(
-                allStationsData.map((station) => ({ label: station.name }))
-              );
+            if (Array.isArray(data) && data.length > 0) {
+              const formattedStations = data.map((station) => ([
+                station.name, station.wallet,
+            ]));
+              setPoliceStations(formattedStations);
             } else {
               console.error(
                 "Invalid data format for all police stations:",
@@ -276,33 +291,35 @@ const LodgeFir = () => {
         </button>
         <video src={mediaBlobUrl} controls autoPlay loop />
       </div> */}
-      <div className="cam" style={{ height: "300px" }}>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            marginTop: "20px",
-          }}
-        >
-          <video
-            ref={myvideo}
-            style={{
-              width: "300px",
-              height: "200px",
-              transform: "scaleX(-1)",
-            }}
-          ></video>
-        </div>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            marginTop: "10px",
-          }}
-        >
-          {/* <button
+      {connectedAccount ? (
+        <>
+          <div className="cam" style={{ height: "300px" }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                marginTop: "20px",
+              }}
+            >
+              <video
+                ref={myvideo}
+                style={{
+                  width: "300px",
+                  height: "200px",
+                  transform: "scaleX(-1)",
+                }}
+              ></video>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                marginTop: "10px",
+              }}
+            >
+              {/* <button
             onClick={handleVideo}
             style={{
               width: "3rem",
@@ -321,220 +338,256 @@ const LodgeFir = () => {
               <FaVideoSlash style={{ fontSize: "1.3rem" }} />
             )}
           </button> */}
-          <button
-            onClick={handleAudio}
-            style={{
-              marginLeft: "10px",
-              width: "3rem",
-              height: "3rem",
-              borderRadius: "50%",
-              border: "none",
-              backgroundColor: "#4a097e",
-              color: "#b8b1f9e6",
-            }}
-            title={audioswitch ? "Turn off audio" : "Turn on audio"}
-          >
-            {audioswitch ? (
-              <FaMicrophone style={{ fontSize: "1.3rem" }} />
-            ) : (
-              <FaMicrophoneSlash style={{ fontSize: "1.3rem" }} />
-            )}
-          </button>
-        </div>
-      </div>
-      <h2 className="form_title">Lodge FIR</h2>
-      <div className="form_lodge_fir">
-        <TextField
-          variant="outlined"
-          placeholder="Write your name"
-          className="form_text"
-          onChange={(e, newValue) => setVictimName(newValue)}
-        />
-        <br />
-        <br />
-        
-        <Autocomplete
-          disablePortal
-          id="subject-select"
-          options={subjects}
-          className="selection_box"
-          getOptionLabel={(option) => option.label}
-          value={selectedSubject}
-          onChange={(e, newValue) => setSelectedSubject(newValue)}
-          renderInput={(params) => (
-            <TextField {...params} label="Select type of crime" />
-          )}
-        />
-        <br />
-        
-        <TextField
-          variant="outlined"
-          type="number"
-          placeholder="Write your Aadhar Number"
-          className="form_text"
-          onChange={(e, newValue) => setAadharNumber(newValue)}
-        />
-        <button style={{backgroundColor: 'rgb(75, 34, 96)', color: 'white', padding: '10px', fontWeight: 'bold', borderRadius: '5px',margin:'10px -140px', zIndex: '100', position: 'absolute'}}>Verify Aadhar</button>
-        <br />
-        <br />
-        <TextField
-          variant="outlined"
-          placeholder="Write the name of accused one"
-          className="form_text"
-          onChange={(e, newValue) => setAccused(newValue)}
-        />
-        <br />
-        <br />
-        <TextField
-          variant="standard"
-          row={3}
-          multiline={2}
-          className="form_desc"
-          placeholder="Write the description of crime"
-          InputProps={{
-            style: {
-              padding: 10,
-            },
-            disableUnderline: true,
-          }}
-          onChange={(e, newValue) => setDescription(newValue)}
-        ></TextField>
-        <br />
-        <br />
-        <Autocomplete
-          disablePortal
-          id="state-select"
-          options={states}
-          className="selection_box"
-          getOptionLabel={(option) => option.label}
-          value={selectedState}
-          onChange={(e, newValue) => setSelectedState(newValue)}
-          renderInput={(params) => (
-            <TextField {...params} label="Select your State" />
-          )}
-        />
-        <br />
-        <Autocomplete
-          disablePortal
-          id="district-select"
-          options={districts}
-          className="selection_box"
-          getOptionLabel={(option) => option.label}
-          value={selectedDistrict}
-          onChange={(e, newValue) => setSelectedDistrict(newValue)}
-          renderInput={(params) => (
-            <TextField {...params} label="Select your District" />
-          )}
-        />
-        <br />
-        <Autocomplete
-          disablePortal
-          id="thana-select"
-          options={policeStations}
-          className="selection_box"
-          getOptionLabel={(option) => option.label}
-          value={selectedThana}
-          onChange={(e, newValue) => setSelectedThana(newValue)}
-          renderInput={(params) => (
-            <TextField {...params} label="Select your Thana" />
-          )}
-        />
-        <br />
-        <Container
-          sx={{
-            boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
-            borderRadius: "0.75rem",
-            fontFamily:
-              "ui-sans-serif, system-ui, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji",
-            background: "rgb(255, 255, 255)",
-            display: "flex",
-            flexDirection: "column",
-            width: "100%",
-            maxWidth: "650px",
-          }}
-        >
-          <Stack
-            sx={{
-              justifyContent: "space-between",
-              alignItems: "center",
-              width: "100%",
-              padding: "12px",
-              " @media(max-width:479px)": { padding: "16px 18px" },
-            }}
-            spacing="0px"
-            direction="row"
-          >
-            <Typography
-              variant="h3"
-              sx={{
-                fontSize: "20px",
-                " @media(max-width:479px)": { fontSize: "18px" },
-              }}
-            >
-              Attach proof file
-            </Typography>
-          </Stack>
-          <Box sx={{ padding: "12px", width: "100%" }}>
-            <Stack
-              sx={{
-                borderRadius: "0.375rem",
-                border: "1px dashed rgb(204, 204, 204)",
-                padding: "14px",
-                width: "100%",
-                alignItems: "center",
-              }}
-              spacing="20px"
-            >
-              <img
-                src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB4PSIwIiB5PSIwIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgNTEyIDUxMiIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgY2xhc3M9IiI+PGNpcmNsZSByPSIyNTYiIGN4PSIyNTYiIGN5PSIyNTYiIGZpbGw9IiNkY2RjZGMiIHNoYXBlPSJjaXJjbGUiIHRyYW5zZm9ybT0ibWF0cml4KDEsMCwwLDEsMCwwKSI+PC9jaXJjbGU+PGcgdHJhbnNmb3JtPSJtYXRyaXgoMC41MTk5OTk5OTk5OTk5OTk5LDAsMCwwLjUxOTk5OTk5OTk5OTk5OTksMTIyLjg4MDAwMDAwMDAwMDAyLDEyMi44ODAwMDAwMDAwMDAwMikiPjxwYXRoIGQ9Ik00NjcgMjExSDMwMVY0NWMwLTI0Ljg1My0yMC4xNDctNDUtNDUtNDVzLTQ1IDIwLjE0Ny00NSA0NXYxNjZINDVjLTI0Ljg1MyAwLTQ1IDIwLjE0Ny00NSA0NXMyMC4xNDcgNDUgNDUgNDVoMTY2djE2NmMwIDI0Ljg1MyAyMC4xNDcgNDUgNDUgNDVzNDUtMjAuMTQ3IDQ1LTQ1VjMwMWgxNjZjMjQuODUzIDAgNDUtMjAuMTQ3IDQ1LTQ1cy0yMC4xNDctNDUtNDUtNDV6IiBmaWxsPSIjOWY5ZjlmIiBvcGFjaXR5PSIxIiBkYXRhLW9yaWdpbmFsPSIjMDAwMDAwIiBjbGFzcz0iIj48L3BhdGg+PC9nPjwvc3ZnPg=="
-                width="35px"
-                height="35px"
-                alt=""
-              />
-              <Typography
-                variant="p"
-                sx={{ fontSize: "14px", fontWeight: "600" }}
-              >
-                Drop your PDF files here to attach them
-              </Typography>
-              <input type="file" onChange={handleFileUpload} />
-              <Button
-                variant="contained"
-                type="submit"
-                onClick={handleUpload}
-                sx={{
-                  backgroundColor: "#0d2036",
-                  color: "rgb(255, 255, 255)",
-                  fontSize: "14px",
-                  fontWeight: "700",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  padding: "8px 12px",
-                  textTransform: "none",
+              <button
+                onClick={handleAudio}
+                style={{
+                  marginLeft: "10px",
+                  width: "3rem",
+                  height: "3rem",
+                  borderRadius: "50%",
+                  border: "none",
+                  backgroundColor: "#4a097e",
+                  color: "#b8b1f9e6",
                 }}
+                title={audioswitch ? "Turn off audio" : "Turn on audio"}
               >
-                Upload
-              </Button>
-            </Stack>
-          </Box>
-        </Container>
-        <div style={{ padding: "20px" }} />
-        <div className="submit_div">
-          <button onClick={() => lodgeFir()} className="submit_btn">
-            Lodge FIR
-          </button>
-        </div>
-      </div>
-      <div style={{ padding: "40px" }} />
-      <Dialog open={validationOpen} onClose={handleValidationClose}>
-        <DialogTitle>Validation Error</DialogTitle>
-        <DialogContent>
-          <DialogContentText>{errorMessage}</DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleValidationClose}>Close</Button>
-        </DialogActions>
-      </Dialog>
+                {audioswitch ? (
+                  <FaMicrophone style={{ fontSize: "1.3rem" }} />
+                ) : (
+                  <FaMicrophoneSlash style={{ fontSize: "1.3rem" }} />
+                )}
+              </button>
+            </div>
+          </div>
+
+          <h2 className="form_title">Lodge FIR</h2>
+          <div className="form_lodge_fir">
+            <TextField
+              variant="outlined"
+              placeholder="Write your name"
+              className="form_text"
+              onChange={(e, newValue) => {
+                setVictimName(newValue), setName(newValue);
+              }}
+            />
+            <br />
+            <br />
+
+            <Autocomplete
+              disablePortal
+              id="subject-select"
+              options={subjects}
+              className="selection_box"
+              getOptionLabel={(option) => option.label}
+              value={selectedSubject}
+              onChange={(e, newValue) => {
+                setSelectedSubject(newValue), setSubject(newValue);
+              }}
+              renderInput={(params) => (
+                <TextField {...params} label="Select type of crime" />
+              )}
+            />
+            <br />
+
+            <TextField
+              variant="outlined"
+              type="number"
+              placeholder="Write your Aadhar Number"
+              className="form_text"
+              onChange={(e, newValue) => setAadharNumber(newValue)}
+            />
+            <button
+              style={{
+                backgroundColor: "rgb(75, 34, 96)",
+                color: "white",
+                padding: "10px",
+                fontWeight: "bold",
+                borderRadius: "5px",
+                margin: "10px -140px",
+                zIndex: "100",
+                position: "absolute",
+              }}
+            >
+              Verify Aadhar
+            </button>
+            <br />
+            <br />
+            <TextField
+              variant="outlined"
+              placeholder="Write the name of accused one"
+              className="form_text"
+              onChange={(e, newValue) => {
+                setAccused(newValue), setCriminal(newValue);
+              }}
+            />
+            <br />
+            <br />
+            <TextField
+              variant="standard"
+              row={3}
+              multiline={2}
+              className="form_desc"
+              placeholder="Write the description of crime"
+              InputProps={{
+                style: {
+                  padding: 10,
+                },
+                disableUnderline: true,
+              }}
+              onChange={(e, newValue) => {
+                setDescription(newValue), setDetails(newValue);
+              }}
+            ></TextField>
+            <br />
+            <br />
+            <Autocomplete
+              disablePortal
+              id="state-select"
+              options={states}
+              className="selection_box"
+              getOptionLabel={(option) => option.label}
+              value={selectedState}
+              onChange={(e, newValue) => {
+                setSelectedState(newValue), setState(newValue);
+              }}
+              renderInput={(params) => (
+                <TextField {...params} label="Select your State" />
+              )}
+            />
+            <br />
+            <Autocomplete
+              disablePortal
+              id="district-select"
+              options={districts}
+              className="selection_box"
+              getOptionLabel={(option) => option.label}
+              value={selectedDistrict}
+              onChange={(e, newValue) => {
+                setSelectedDistrict(newValue), setDistrict(newValue);
+              }}
+              renderInput={(params) => (
+                <TextField {...params} label="Select your District" />
+              )}
+            />
+            <br />
+            <Autocomplete
+              disablePortal
+              id="thana-select"
+              options={policeStations}
+              className="selection_box"
+              getOptionLabel={(option) => option}
+              value={selectedThana}
+              onChange={(e, newValue) => {
+                setSelectedThana(newValue[0]),
+                  setPoliceStation(newValue[1]);
+              }}
+              renderInput={(params) => (
+                <TextField {...params} label="Select your Thana" />
+              )}
+            />
+            <br />
+            <Container
+              sx={{
+                boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
+                borderRadius: "0.75rem",
+                fontFamily:
+                  "ui-sans-serif, system-ui, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji",
+                background: "rgb(255, 255, 255)",
+                display: "flex",
+                flexDirection: "column",
+                width: "100%",
+                maxWidth: "650px",
+              }}
+            >
+              <Stack
+                sx={{
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  width: "100%",
+                  padding: "12px",
+                  " @media(max-width:479px)": { padding: "16px 18px" },
+                }}
+                spacing="0px"
+                direction="row"
+              >
+                <Typography
+                  variant="h3"
+                  sx={{
+                    fontSize: "20px",
+                    " @media(max-width:479px)": { fontSize: "18px" },
+                  }}
+                >
+                  Attach proof file
+                </Typography>
+              </Stack>
+              <Box sx={{ padding: "12px", width: "100%" }}>
+                <Stack
+                  sx={{
+                    borderRadius: "0.375rem",
+                    border: "1px dashed rgb(204, 204, 204)",
+                    padding: "14px",
+                    width: "100%",
+                    alignItems: "center",
+                  }}
+                  spacing="20px"
+                >
+                  <img
+                    src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB4PSIwIiB5PSIwIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgNTEyIDUxMiIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgY2xhc3M9IiI+PGNpcmNsZSByPSIyNTYiIGN4PSIyNTYiIGN5PSIyNTYiIGZpbGw9IiNkY2RjZGMiIHNoYXBlPSJjaXJjbGUiIHRyYW5zZm9ybT0ibWF0cml4KDEsMCwwLDEsMCwwKSI+PC9jaXJjbGU+PGcgdHJhbnNmb3JtPSJtYXRyaXgoMC41MTk5OTk5OTk5OTk5OTk5LDAsMCwwLjUxOTk5OTk5OTk5OTk5OTksMTIyLjg4MDAwMDAwMDAwMDAyLDEyMi44ODAwMDAwMDAwMDAwMikiPjxwYXRoIGQ9Ik00NjcgMjExSDMwMVY0NWMwLTI0Ljg1My0yMC4xNDctNDUtNDUtNDVzLTQ1IDIwLjE0Ny00NSA0NXYxNjZINDVjLTI0Ljg1MyAwLTQ1IDIwLjE0Ny00NSA0NXMyMC4xNDcgNDUgNDUgNDVoMTY2djE2NmMwIDI0Ljg1MyAyMC4xNDcgNDUgNDUgNDVzNDUtMjAuMTQ3IDQ1LTQ1VjMwMWgxNjZjMjQuODUzIDAgNDUtMjAuMTQ3IDQ1LTQ1cy0yMC4xNDctNDUtNDUtNDV6IiBmaWxsPSIjOWY5ZjlmIiBvcGFjaXR5PSIxIiBkYXRhLW9yaWdpbmFsPSIjMDAwMDAwIiBjbGFzcz0iIj48L3BhdGg+PC9nPjwvc3ZnPg=="
+                    width="35px"
+                    height="35px"
+                    alt=""
+                  />
+                  <Typography
+                    variant="p"
+                    sx={{ fontSize: "14px", fontWeight: "600" }}
+                  >
+                    Drop your PDF files here to attach them
+                  </Typography>
+                  <input type="file" onChange={handleFileUpload} />
+                  <Button
+                    variant="contained"
+                    type="submit"
+                    onClick={handleUpload}
+                    sx={{
+                      backgroundColor: "#0d2036",
+                      color: "rgb(255, 255, 255)",
+                      fontSize: "14px",
+                      fontWeight: "700",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      padding: "8px 12px",
+                      textTransform: "none",
+                    }}
+                  >
+                    Upload
+                  </Button>
+                </Stack>
+              </Box>
+            </Container>
+            <div style={{ padding: "20px" }} />
+            <div className="submit_div">
+              <button onClick={() => lodgeFir()} className="submit_btn">
+                Lodge FIR
+              </button>
+            </div>
+          </div>
+
+          <div style={{ padding: "40px" }} />
+          <Dialog open={validationOpen} onClose={handleValidationClose}>
+            <DialogTitle>Validation Error</DialogTitle>
+            <DialogContent>
+              <DialogContentText>{errorMessage}</DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleValidationClose}>Close</Button>
+            </DialogActions>
+          </Dialog>
+        </>
+      ) : (
+        <h1 style={{ textAlign: "center", padding: "100px" }}>
+          Connect your wallet to Lodge FIR
+        </h1>
+      )}
     </>
   );
 };

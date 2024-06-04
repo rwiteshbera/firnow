@@ -22,6 +22,15 @@ const getContract = async () => {
 
 const Web3ApiProvider = ({ children }) => {
   const [connectedAccount, setConnectedAccount] = useState(null);
+  const [cid, setCid] = useState("");
+  const [name, setName] = useState("");
+  const [criminal, setCriminal] = useState("");
+  const [details, setDetails] = useState("");
+  const [subject, setSubject] = useState("");
+  const [state, setState] = useState("");
+  const [district, setDistrict] = useState("");
+  const [policeStation, setPoliceStation] = useState("");
+
 
   const connectWallet = async () => {
     try {
@@ -61,21 +70,25 @@ const Web3ApiProvider = ({ children }) => {
     //   return;
     // }
     try {
-
+      // const resp = await fetch("http://localhost:8002/");
+      // const {snowflake:id} = await resp.json();
+      console.log("in lodge");
       const tx = await getContract();
+      console.log(tx);
       const data = await tx.lodgeFir(
-        "Mr. X",
-        "Mr. Y",
-        "Murder",
-        "Description",
+        "Mr A",
+        "B",
+        "dowry",
+        "asked money",
         "West Bengal",
         "Hooghly",
-        "0xa73D1330Ac56A106527Eaa00c458C44101Db852e",
-        "http://fileid",
+        "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
+        "dskodjwkd1515",
         123,
         "pending"
       );
       console.log(data);
+      
     } catch (error) {
       console.log(error);
     }
@@ -164,7 +177,15 @@ const Web3ApiProvider = ({ children }) => {
         Disconnect,
         LodgeFIR,
         getFIRbyThana,
-        getFIRbyVictim
+        getFIRbyVictim,
+        setName,
+        setCriminal,
+        setSubject,
+        setDetails,
+        setState,
+        setDistrict,
+        setPoliceStation,
+        setCid
       }}
     >
       {children}
