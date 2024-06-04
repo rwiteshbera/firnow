@@ -3,6 +3,7 @@ import time
 from datetime import datetime
 
 from fastapi import FastAPI, HTTPException, status
+from fastapi.middleware.cors import CORSMiddleware
 
 from config import Mode, get_log_config, settings
 from models.auth import Snowflake
@@ -16,6 +17,21 @@ creation_date: datetime = settings.APP_CREATION_DATE
 previous_offset: int = 0
 node_id: int = settings.NODE_ID
 sequence_num: int = 0
+
+id_service.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://127.0.0.1:8080",
+        "http://127.0.0.1:3000",
+        "http://localhost:8080",
+        "http://localhost:3000",
+        "https://api.firnow.duckdns.org",
+        "http://api.firnow.duckdns.org",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @id_service.get(
